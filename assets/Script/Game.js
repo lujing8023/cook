@@ -39,17 +39,38 @@ cc.Class({
         }
     },
     checkPic: function () {
-        switch (this.numChoose) {
-            case "1":
-                let bread      = this.ndChoose.getChildByName("bread");
-                let breadFrame = bread.getComponent(cc.Sprite).spriteFrame;
-                if(breadFrame == null){
-                    cc.log("..............")
-                }else{
-                    this.changeList();
-                }
-                break;
+        let ndName = this.ndChoose.getChildByName(this.numChoose)
+        let ndSpri = ndName.getComponent(cc.Sprite).spriteFrame;
+        if(this.numChoose == ndName.name){
+            if(ndSpri == null){
+                cc.log("..............")
+            }else{
+                this.changeList();
+            }
         }
+        //
+        //  switch (this.numChoose) {
+        //     case "1":
+        //         let ndPan      = this.ndChoose.getChildByName("1");
+        //         let ndPanFrame = ndPan.getComponent(cc.Sprite).spriteFrame;
+        //         if(ndPanFrame == null){
+        //             cc.log("..............")
+        //         }else{
+        //             this.changeList();
+        //         }
+        //         this.numChoose = "2"
+        //         break;
+        //     case "2":
+        //         let ndBread    = this.ndChoose.getChildByName("2");
+        //         let ndBread    = ndBread.getComponent(cc.Sprite).spriteFrame;
+        //         if(ndPanFrame == null){
+        //             cc.log("..............")
+        //         }else{
+        //             this.changeList();
+        //         }
+        //         this.numChoose = "3"
+        //         break;
+        // }
     },
     changeList: function () {
         if (this.numRem == 1) {
@@ -80,13 +101,12 @@ cc.Class({
         }
     },
     eventTarget: function (event) {
-        let eventName = event.target.parent
-        this.addPicture(eventName)
+        let ndTarget = event.target.parent
+        this.addPicture(ndTarget)
 
     },
-    addPicture:function(eventName){
-        this.ndChoose.getChildByName("bread").getComponent(cc.Sprite).spriteFrame = eventName.getComponent(cc.Sprite).spriteFrame
-        
+    addPicture:function(ndTarget){
+        this.ndChoose.getChildByName("1").getComponent(cc.Sprite).spriteFrame = ndTarget.getComponent(cc.Sprite).spriteFrame;
     }
 
 });

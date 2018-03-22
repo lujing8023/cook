@@ -256,7 +256,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "bread",
+    "_name": "panzi",
     "_objFlags": 0,
     "_parent": {
       "__id__": 5
@@ -2723,7 +2723,7 @@
       "__id__": 55
     },
     "numRem": 0,
-    "numChoose": 1,
+    "numChoose": "1",
     "picFram": [
       {
         "__uuid__": "d1e1c68b-b1bd-4783-87cb-0e76b2d397e0"

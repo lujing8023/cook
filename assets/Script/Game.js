@@ -2,26 +2,33 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        ndChoose        : cc.Node,
-        ndbread         : cc.Node,
-        ndP             : cc.Node,
-        ndBox           : cc.Node,
-        ndListPar       : cc.Node,
-        ndList          : cc.Node,
-        ndListParTwo    : cc.Node,
-        ndListTwo       : cc.Node,
-        numRem          : 0,
-        numChoose       : "1",
+        ndChoose: cc.Node,
+        ndbread: cc.Node,
+        nd_P: cc.Node,
+        ndP: cc.Node,
+        ndBox: cc.Node,
+        ndListPar: cc.Node,
+        ndList: cc.Node,
+        ndListParTwo: cc.Node,
+        ndListTwo: cc.Node,
+        numRem: 0,
+        numChoose: "1",
+
         picFram: {
             type: cc.SpriteFrame,
             default: [],
-        }
+        },
+
+        picBreadFram: {
+            type: cc.SpriteFrame,
+            default: [],
+        },
     },
-    onLoad: function () {
+    onLoad: function() {
         this.upUi();
         this.ndP.active = false;
     },
-    onButtonClick: function (event, cb) {
+    onButtonClick: function(event, cb) {
         switch (cb) {
             case "back":
                 this.ndBox.active = true;
@@ -37,20 +44,20 @@ cc.Class({
                 break;
         }
     },
-    checkPic: function () {
+    checkPic: function() {
         let ndName = this.ndChoose.getChildByName(this.numChoose)
         let ndSpri = ndName.getComponent(cc.Sprite).spriteFrame;
-        if(this.numChoose == ndName.name){
-            if(ndSpri == null){
+        if (this.numChoose == ndName.name) {
+            if (ndSpri == null) {
                 cc.log("..............")
-            }else{
+            } else {
                 this.changeList();
-                this.numChoose  = this.numChoose - 0 + 1 + "";
-                cc.log("numChoose",this.numChoose);
+                this.numChoose = this.numChoose - 0 + 1 + "";
+                cc.log("numChoose", this.numChoose);
             }
         }
     },
-    changeList: function () {
+    changeList: function() {
         if (this.numRem == 1) {
             this.numRem = 2;
             this.destroyFunc();
@@ -62,7 +69,7 @@ cc.Class({
             this.ndListParTwo.active = false;
         }
     },
-    upUi: function () {
+    upUi: function() {
         this.numRem = 1;
         _.times(this.picFram.length, (i) => {
             let node = cc.instantiate(this.ndP);
@@ -72,16 +79,26 @@ cc.Class({
             this.ndList.addChild(node);
         })
     },
-    destroyFunc: function () {
+    upDataPic: function() {
+        let numBread = this.picBreadFram.length
+        _.times(this.picFram.length, (i) => {
+            let node = cc.instantiate(this.nd_P);
+            node.active = true;
+            node.getComponent(cc.Sprite).spriteFrame = this.picFram[i];
+            node.name = i + " ";
+            this.ndList.addChild(node);
+        })
+    },
+    destroyFunc: function() {
         while (this.ndList.children.length > 0) {
             this.ndList.children[0].removeFromParent();
         }
     },
-    eventTarget: function (event) {
+    eventTarget: function(event) {
         let ndTarget = event.target.parent;
         this.addPicture(ndTarget);
     },
-    addPicture:function(ndTarget){
+    addPicture: function(ndTarget) {
         this.ndChoose.getChildByName(this.numChoose).getComponent(cc.Sprite).spriteFrame = ndTarget.getComponent(cc.Sprite).spriteFrame;
     }
 

@@ -60,4 +60,14 @@ cc.Class({
     eventTarget: function () {
 
     },
+
+
+//
+//
+//
+//
+//
+//
+//
+//
 });

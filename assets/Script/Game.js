@@ -34,7 +34,6 @@ cc.Class({
                 break;
             case "next":
                 this.checkPic()
-                
                 break;
         }
     },
@@ -46,31 +45,10 @@ cc.Class({
                 cc.log("..............")
             }else{
                 this.changeList();
+                this.numChoose  = this.numChoose - 0 + 1 + "";
+                cc.log("numChoose",this.numChoose);
             }
         }
-        //
-        //  switch (this.numChoose) {
-        //     case "1":
-        //         let ndPan      = this.ndChoose.getChildByName("1");
-        //         let ndPanFrame = ndPan.getComponent(cc.Sprite).spriteFrame;
-        //         if(ndPanFrame == null){
-        //             cc.log("..............")
-        //         }else{
-        //             this.changeList();
-        //         }
-        //         this.numChoose = "2"
-        //         break;
-        //     case "2":
-        //         let ndBread    = this.ndChoose.getChildByName("2");
-        //         let ndBread    = ndBread.getComponent(cc.Sprite).spriteFrame;
-        //         if(ndPanFrame == null){
-        //             cc.log("..............")
-        //         }else{
-        //             this.changeList();
-        //         }
-        //         this.numChoose = "3"
-        //         break;
-        // }
     },
     changeList: function () {
         if (this.numRem == 1) {
@@ -86,7 +64,6 @@ cc.Class({
     },
     upUi: function () {
         this.numRem = 1;
-        cc.log(this.picFram.length)
         _.times(this.picFram.length, (i) => {
             let node = cc.instantiate(this.ndP);
             node.active = true;
@@ -97,16 +74,15 @@ cc.Class({
     },
     destroyFunc: function () {
         while (this.ndList.children.length > 0) {
-            this.ndList.children[0].removeFromParent()
+            this.ndList.children[0].removeFromParent();
         }
     },
     eventTarget: function (event) {
-        let ndTarget = event.target.parent
-        this.addPicture(ndTarget)
-
+        let ndTarget = event.target.parent;
+        this.addPicture(ndTarget);
     },
     addPicture:function(ndTarget){
-        this.ndChoose.getChildByName("1").getComponent(cc.Sprite).spriteFrame = ndTarget.getComponent(cc.Sprite).spriteFrame;
+        this.ndChoose.getChildByName(this.numChoose).getComponent(cc.Sprite).spriteFrame = ndTarget.getComponent(cc.Sprite).spriteFrame;
     }
 
 });

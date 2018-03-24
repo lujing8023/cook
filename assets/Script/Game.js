@@ -24,11 +24,24 @@ cc.Class({
             default: [],
         },
     },
-    onLoad: function() {
+    onLoad: function () {
+        //picFramCtl
+        this.picArr = [this.picFram, this.picBreadFram];
         this.upUi();
         this.ndP.active = false;
+        this.nd_P.active = false;
     },
-    onButtonClick: function(event, cb) {
+    upUi: function () {
+        this.numRem = 1;
+        _.times(this.picFram.length, (i) => {
+            let node = cc.instantiate(this.ndP);
+            node.active = true;
+            node.getComponent(cc.Sprite).spriteFrame = this.picFram[i];
+            node.name = i + " ";
+            this.ndList.addChild(node);
+        })
+    },
+    onButtonClick: function (event, cb) {
         switch (cb) {
             case "back":
                 this.ndBox.active = true;
@@ -40,65 +53,71 @@ cc.Class({
                 cc.director.loadScene("Main");
                 break;
             case "next":
-                this.checkPic()
+                this.checkPic();
                 break;
         }
     },
-    checkPic: function() {
-        let ndName = this.ndChoose.getChildByName(this.numChoose)
+    checkPic: function () {
+        //放置盘子的空节点
+        let ndName = this.ndChoose.getChildByName(this.numChoose);
+        //获取盘子空节点的图片渲染
         let ndSpri = ndName.getComponent(cc.Sprite).spriteFrame;
-        if (this.numChoose == ndName.name) {
-            if (ndSpri == null) {
-                cc.log("..............")
-            } else {
-                this.changeList();
-                this.numChoose = this.numChoose - 0 + 1 + "";
-                cc.log("numChoose", this.numChoose);
-            }
+        if (ndSpri == null) {
+            cc.log("..............");
+        } else {
+            this.changeList();
+            this.numChoose = this.numChoose - 0 + 1 + "";
+            cc.log("numChoose", this.numChoose);
         }
     },
-    changeList: function() {
-        if (this.numRem == 1) {
-            this.numRem = 2;
+    changeList: function () {
+        if (this.numRem % 2 == 1) {
+            this.numRem += 1;
             this.destroyFunc();
             this.ndListPar.active = false;
             this.ndListParTwo.active = true;
+            cc.log("active", this.ndListParTwo.active);
+            this.upDataPic();
         } else {
-            this.numRem = 1;
+            this.numRem += 1;
+            this.destroyFunc();
             this.ndListPar.active = true;
             this.ndListParTwo.active = false;
+            this.upDataPic();
         }
     },
-    upUi: function() {
-        this.numRem = 1;
-        _.times(this.picFram.length, (i) => {
-            let node = cc.instantiate(this.ndP);
-            node.active = true;
-            node.getComponent(cc.Sprite).spriteFrame = this.picFram[i];
-            node.name = i + " ";
-            this.ndList.addChild(node);
+    upDataPic: function () {
+        let picFram = this.picArr[this.numRem - 1]
+        cc.log("picFram", picFram);
+        _.times(picFram.length, (i) => {
+            if (this.numRem % 2 == 0) {
+                let node = cc.instantiate(this.nd_P);
+                node.active = true;
+                node.getComponent(cc.Sprite).spriteFrame = picFram[i];
+                node.name = i + " ";
+                if (this.numRem % 2 == 0) {
+                    this.ndListTwo.addChild(node);
+                } else {
+                    this.ndList.addChild(node);
+                }
+            }
         })
     },
-    upDataPic: function() {
-        let numBread = this.picBreadFram.length
-        _.times(this.picFram.length, (i) => {
-            let node = cc.instantiate(this.nd_P);
-            node.active = true;
-            node.getComponent(cc.Sprite).spriteFrame = this.picFram[i];
-            node.name = i + " ";
-            this.ndList.addChild(node);
-        })
-    },
-    destroyFunc: function() {
-        while (this.ndList.children.length > 0) {
-            this.ndList.children[0].removeFromParent();
+    destroyFunc: function () {
+        if (this.numRem % 2 == 1) {
+            this.ndList.removeChild();
+        } else {
+            this.ndListTwo.removeChild();
         }
+        // while (this.ndList.children.length > 0) {
+        //     this.ndList.children[0].removeFromParent();
+        // }
     },
-    eventTarget: function(event) {
+    eventTarget: function (event) {
         let ndTarget = event.target.parent;
         this.addPicture(ndTarget);
     },
-    addPicture: function(ndTarget) {
+    addPicture: function (ndTarget) {
         this.ndChoose.getChildByName(this.numChoose).getComponent(cc.Sprite).spriteFrame = ndTarget.getComponent(cc.Sprite).spriteFrame;
     }
 

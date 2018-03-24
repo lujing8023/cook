@@ -81,10 +81,10 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 75
+        "__id__": 76
       },
       {
-        "__id__": 76
+        "__id__": 77
       }
     ],
     "_prefab": null,
@@ -185,7 +185,7 @@
     },
     "_enabled": true,
     "_spriteFrame": {
-      "__uuid__": "7a4545ea-0e5f-4d1f-8d59-72bc7048afa7"
+      "__uuid__": "d86cb12f-452d-4619-944a-467e5f777038"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -248,7 +248,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": 0
+      "y": 140
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -366,13 +366,13 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 40,
-      "height": 36
+      "width": 160,
+      "height": 160
     },
     "_rotationX": 0,
     "_rotationY": 0,
-    "_scaleX": 1,
-    "_scaleY": 1,
+    "_scaleX": 0.5,
+    "_scaleY": 0.5,
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
@@ -1544,7 +1544,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": -250
+      "y": -213
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -2213,7 +2213,7 @@
     "_active": false,
     "_components": [
       {
-        "__id__": 74
+        "__id__": 75
       },
       {
         "__id__": 62
@@ -2247,7 +2247,7 @@
     "_position": {
       "__type__": "cc.Vec2",
       "x": 0,
-      "y": -250
+      "y": -213
     },
     "_skewX": 0,
     "_skewY": 0,
@@ -2275,10 +2275,10 @@
         "__id__": 61
       },
       {
-        "__id__": 72
+        "__id__": 73
       },
       {
-        "__id__": 73
+        "__id__": 74
       }
     ],
     "_prefab": null,
@@ -2456,7 +2456,7 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 71
+        "__id__": 72
       }
     ],
     "_prefab": null,
@@ -2582,7 +2582,7 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 70
+        "__id__": 71
       }
     ],
     "_prefab": null,
@@ -2603,8 +2603,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 105,
-      "height": 105
+      "width": 106,
+      "height": 106
     },
     "_rotationX": 0,
     "_rotationY": 0,
@@ -2612,7 +2612,7 @@
     "_scaleY": 1.5,
     "_position": {
       "__type__": "cc.Vec2",
-      "x": -897.5,
+      "x": -897,
       "y": 0
     },
     "_skewX": 0,
@@ -2728,7 +2728,11 @@
     "zoomScale": 1.2,
     "pressedSprite": null,
     "hoverSprite": null,
-    "clickEvents": [],
+    "clickEvents": [
+      {
+        "__id__": 70
+      }
+    ],
     "_N$interactable": true,
     "_N$enableAutoGrayEffect": false,
     "_N$normalColor": {
@@ -2752,6 +2756,15 @@
     }
   },
   {
+    "__type__": "cc.ClickEvent",
+    "target": {
+      "__id__": 2
+    },
+    "component": "Game",
+    "handler": "eventTarget",
+    "customEventData": ""
+  },
+  {
     "__type__": "cc.Sprite",
     "_name": "",
     "_objFlags": 0,
@@ -2760,10 +2773,10 @@
     },
     "_enabled": true,
     "_spriteFrame": {
-      "__uuid__": "76ea6c7d-a89e-44cc-91fe-2047ad3e9b78"
+      "__uuid__": "9e2206e0-b716-413a-aa75-8ffc74a8c6c0"
     },
     "_type": 0,
-    "_sizeMode": 1,
+    "_sizeMode": 0,
     "_fillType": 0,
     "_fillCenter": {
       "__type__": "cc.Vec2",
@@ -2930,10 +2943,10 @@
       "__id__": 44
     },
     "ndListParTwo": {
-      "__id__": 63
+      "__id__": 57
     },
     "ndListTwo": {
-      "__id__": 57
+      "__id__": 63
     },
     "numRem": 0,
     "numChoose": "1",

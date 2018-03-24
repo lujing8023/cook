@@ -2,17 +2,18 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        ndChoose: cc.Node,
-        ndbread: cc.Node,
-        nd_P: cc.Node,
-        ndP: cc.Node,
-        ndBox: cc.Node,
-        ndListPar: cc.Node,
-        ndList: cc.Node,
-        ndListParTwo: cc.Node,
-        ndListTwo: cc.Node,
-        numRem: 0,
-        numChoose: "1",
+        ndHotBread      :   cc.Node,
+        ndChoose        :   cc.Node,
+        ndBread         :   cc.Node,
+        nd_P            :   cc.Node,
+        ndP             :   cc.Node,
+        ndBox           :   cc.Node,
+        ndListPar       :   cc.Node,
+        ndList          :   cc.Node,
+        ndListParTwo    :   cc.Node,
+        ndListTwo       :   cc.Node,
+        numRem          :   0,
+        numChoose       :   "1",
 
         picFram: {
             type: cc.SpriteFrame,
@@ -25,9 +26,11 @@ cc.Class({
         },
     },
     onLoad: function () {
+        this.colliderCtl = this.addComponent("ColliderCtl").init(this);
         //picFramCtl
         this.picArr = [this.picFram, this.picBreadFram];
         this.upUi();
+        this.colliderFunc();
         this.ndP.active = false;
         this.nd_P.active = false;
     },
@@ -76,7 +79,8 @@ cc.Class({
             if(this.numRem == 3){
                 this.ndListParTwo.active = false;
                 this.destroyFunc();
-                // let ndHotBread = 
+                this.ndHotBread.active = true;
+                this.upTouch();
                 cc.log("现在是烤面包阶段")
 
             }else{
@@ -133,6 +137,20 @@ cc.Class({
     },
     addPicture: function (ndTarget) {
         this.ndChoose.getChildByName(this.numChoose).getComponent(cc.Sprite).spriteFrame = ndTarget.getComponent(cc.Sprite).spriteFrame;
+    },
+    //Bread Follow
+    //跟随问题没解决
+    upTouch: function () {
+        this.node.on('touchmove', (touch) => {
+            let location = touch.getLocation();
+            let post = this.node.convertToNodeSpaceAR(location)
+            // cc.log("世界坐标",post)
+            this.ndBread.setPosition(post.x, post.y);
+        })
+    },
+    colliderFunc:function(){
+        var manager = cc.director.getCollisionManager();
+            manager.enabled = true;
     }
 
 });

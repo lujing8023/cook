@@ -71,24 +71,38 @@ cc.Class({
         }
     },
     changeList: function () {
-        if (this.numRem % 2 == 1) {
-            this.numRem += 1;
-            this.destroyFunc();
-            this.ndListPar.active = false;
-            this.ndListParTwo.active = true;
-            cc.log("active", this.ndListParTwo.active);
-            this.upDataPic();
-        } else {
-            this.numRem += 1;
-            this.destroyFunc();
-            this.ndListPar.active = true;
-            this.ndListParTwo.active = false;
-            this.upDataPic();
+        this.numRem += 1;
+        if(this.numRem == 3 || this.numRem == 4){
+            if(this.numRem == 3){
+                this.ndListParTwo.active = false;
+                this.destroyFunc();
+                // let ndHotBread = 
+                cc.log("现在是烤面包阶段")
+
+            }else{
+
+                cc.log("现在是选果酱阶段")
+
+            }
+        }else{
+            if (this.numRem % 2 == 1) {
+                this.destroyFunc();
+                this.ndListPar.active = true;
+                this.ndListParTwo.active = false;
+                this.upDataPic();
+            } else {
+                // this.numRem += 1;
+                this.destroyFunc();
+                this.ndListPar.active = false;
+                this.ndListParTwo.active = true;
+                cc.log("active", this.ndListParTwo.active);
+                this.upDataPic();
+            }
+            cc.log("【记录步骤的数字】",this.numRem)
         }
     },
     upDataPic: function () {
         let picFram = this.picArr[this.numRem - 1]
-        cc.log("picFram", picFram);
         _.times(picFram.length, (i) => {
             if (this.numRem % 2 == 0) {
                 let node = cc.instantiate(this.nd_P);

@@ -7,11 +7,11 @@ cc.Class({
     },
 
 
-    onLoad: function() {
+    onLoad: function () {
 
     },
 
-    onButtonClick: function(event, cb) {
+    onButtonClick: function (event, cb) {
         switch (cb) {
             case "sand":
                 cc.director.loadScene("Game");
@@ -22,7 +22,7 @@ cc.Class({
             case "hot":
                 cc.director.loadScene("Game");
                 break;
-                // case "next":
+            // case "next":
 
         }
     }

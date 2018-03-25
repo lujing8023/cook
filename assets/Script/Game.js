@@ -3,6 +3,9 @@ cc.Class({
 
     properties: {
         ndHotBread      :   cc.Node,
+        ndJame          :   cc.Node,
+        ndJam1          :   cc.Node,
+        ndJam2          :   cc.Node,
         ndChoose        :   cc.Node,
         ndBread         :   cc.Node,
         nd_P            :   cc.Node,
@@ -24,11 +27,16 @@ cc.Class({
             type: cc.SpriteFrame,
             default: [],
         },
+        picVegeFram:{
+            type: cc.spriteFrame,
+            default: [],
+        }
+
     },
     onLoad: function () {
         this.colliderCtl = this.addComponent("ColliderCtl").init(this);
         //picFramCtl
-        this.picArr = [this.picFram, this.picBreadFram];
+        this.picArr = [this.picFram, this.picBreadFram ,null , null , null , ];
         this.upUi();
         this.colliderFunc();
         this.ndP.active = false;
@@ -55,6 +63,17 @@ cc.Class({
             case "sure":
                 cc.director.loadScene("Main");
                 break;
+            case "jam1":
+                let jam1Spri = this.ndJam1.getComponent(cc.Sprite).spriteFrame;
+                cc.log("选第一种果酱")
+                this.ndChoose.getChildByName("4").getComponent(cc.Sprite).spriteFrame = jam1Spri;
+                break;
+            case "jam2":
+                let jam2Spri = this.ndJam2.getComponent(cc.Sprite).spriteFrame;
+                cc.log("选第二种果酱")
+                this.ndChoose.getChildByName("4").getComponent(cc.Sprite).spriteFrame = jam2Spri;
+
+                break;
             case "next":
                 this.checkPic();
                 break;
@@ -75,18 +94,23 @@ cc.Class({
     },
     changeList: function () {
         this.numRem += 1;
-        if(this.numRem == 3 || this.numRem == 4){
-            if(this.numRem == 3){
-                this.ndListParTwo.active = false;
-                this.destroyFunc();
-                this.ndHotBread.active = true;
-                this.upTouch();
-                cc.log("现在是烤面包阶段")
-
+        if(this.numRem == 3 || this.numRem == 4 || this.numRem == 5){
+            if(this.numRem == 3 || this.numRem == 4){
+                if(this.numRem == 3){
+                    this.ndListParTwo.active = false;
+                    this.destroyFunc();
+                    this.ndHotBread.active = true;
+                    this.upTouch();
+                    cc.log("现在是烤面包阶段")
+                }else{
+                    this.ndHotBread.active = false;
+                    this.ndJame.active = true;
+                    cc.log("现在是选果酱阶段")
+                }
             }else{
-
-                cc.log("现在是选果酱阶段")
-
+                //this.numRem == 5
+                //进行涂抹面包阶段
+                this.ndJame.active = false
             }
         }else{
             if (this.numRem % 2 == 1) {
@@ -148,9 +172,63 @@ cc.Class({
             this.ndBread.setPosition(post.x, post.y);
         })
     },
+    touchOff:function(){
+        this.node.off('touchmove');
+    },
     colliderFunc:function(){
         var manager = cc.director.getCollisionManager();
             manager.enabled = true;
-    }
+    },
+    ////////////////////////////
+    //刮刮卡
+    touchBegin:function(){
+        this.node.on(cc.Node.EventType.TOUCH_START, this._onTouchBegin, this);
+        this.node.on(cc.Node.EventType.TOUCH_MOVE, this._onTouchMoved, this);
+        this.node.on(cc.Node.EventType.TOUCH_END, this._onTouchEnd, this);
+        this.node.on(cc.Node.EventType.TOUCH_CANCEL, this._onTouchCancel, this);
+    },
+
+    onDestroy:function () {
+        this.node.off(cc.Node.EventType.TOUCH_START, this._onTouchBegin, this);
+        this.node.off(cc.Node.EventType.TOUCH_MOVE, this._onTouchMoved, this);
+        this.node.off(cc.Node.EventType.TOUCH_END, this._onTouchEnd, this);
+        this.node.off(cc.Node.EventType.TOUCH_CANCEL, this._onTouchCancel, this);
+    },
+
+    _onTouchBegin:function (event) {
+
+        cc.log('touchBegin');
+
+        var point = event.touch.getLocation();
+        point = this.node.convertToNodeSpaceAR(point);
+        this._addCircle(point);
+    },
+
+    _onTouchMoved:function (event) {
+        var point = event.touch.getLocation();
+        point = this.node.convertToNodeSpaceAR(point);
+        this._addCircle(point);
+    },
+
+    _onTouchEnd:function (event) {
+        var point = event.touch.getLocation();
+        point = this.node.convertToNodeSpaceAR(point);
+        this._addCircle(point);
+    },
+
+    _onTouchCancel:function (event) {
+        // var point = event.touch.getLocation();
+        // point = this.node.convertToNodeSpaceAR(point);
+        // this._addCircle(point);
+    },
+
+    _addCircle:function (point) {
+        var stencil = this.mask._clippingStencil;
+        var color = cc.color(255, 255, 255, 0);
+        stencil.drawPoly(this.mask._calculateCircle(point,cc.p(50,50), 64), color, 0, color);
+        if (!CC_JSB) {
+            cc.renderer.childrenOrderDirty = true;
+        }
+    },
 
 });

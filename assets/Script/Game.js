@@ -3,6 +3,7 @@ cc.Class({
 
     properties: {
         ndHotBread      :   cc.Node,
+        ndJameBottle    :   cc.Node,
         ndJame          :   cc.Node,
         ndJam1          :   cc.Node,
         ndJam2          :   cc.Node,
@@ -64,15 +65,19 @@ cc.Class({
                 cc.director.loadScene("Main");
                 break;
             case "jam1":
-                let jam1Spri = this.ndJam1.getComponent(cc.Sprite).spriteFrame;
-                cc.log("选第一种果酱")
-                this.ndChoose.getChildByName("4").getComponent(cc.Sprite).spriteFrame = jam1Spri;
+                // this.ndJame.active = true;
+                // let jam1Spri = this.ndJam1.getComponent(cc.Sprite).spriteFrame;
+                // cc.log("选第一种果酱")
+                this.ndJameBottle.active = true;
+                this.ndJame.active       = false;
                 break;
             case "jam2":
-                let jam2Spri = this.ndJam2.getComponent(cc.Sprite).spriteFrame;
-                cc.log("选第二种果酱")
-                this.ndChoose.getChildByName("4").getComponent(cc.Sprite).spriteFrame = jam2Spri;
-
+                // this.nsdJame.active = true;
+                // let jam2Spri = this.ndJam2.getComponent(cc.Sprite).spriteFrame;
+                // cc.log("选第二种果酱")
+                // this.ndChoose.getChildByName("4").getComponent(cc.Sprite).spriteFrame = jam2Spri;
+                this.ndJameBottle.active = true;
+                this.ndJame.active       = false;
                 break;
             case "next":
                 this.checkPic();
@@ -94,6 +99,9 @@ cc.Class({
     },
     changeList: function () {
         this.numRem += 1;
+        if(this.numRem == 2){
+            this.ndBread.active = true;
+        }
         if(this.numRem == 3 || this.numRem == 4 || this.numRem == 5){
             if(this.numRem == 3 || this.numRem == 4){
                 if(this.numRem == 3){

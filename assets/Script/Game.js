@@ -19,6 +19,12 @@ cc.Class({
         numRem          :   0,
         numChoose       :   "1",
 
+
+        /////////////////////////////(刮刮卡)
+        rsultLabel      :   cc.Label,
+        mask            :   cc.Mask,
+        promptLabel     :   cc.Label,
+        ///////////////////////////
         picFram: {
             type: cc.SpriteFrame,
             default: [],
@@ -35,6 +41,11 @@ cc.Class({
 
     },
     onLoad: function () {
+        /////////////关闭面包节点和刮刮乐按钮
+        this.rsultLabel.active = false;
+        this.mask.active = false;
+        this.ndBread.active = false;
+        
         this.colliderCtl = this.addComponent("ColliderCtl").init(this);
         //picFramCtl
         this.picArr = [this.picFram, this.picBreadFram ,null , null , null , ];
@@ -116,6 +127,7 @@ cc.Class({
                     cc.log("现在是选果酱阶段")
                 }
             }else{
+                this.touchBegin()
                 //this.numRem == 5
                 //进行涂抹面包阶段
                 this.ndJame.active = false

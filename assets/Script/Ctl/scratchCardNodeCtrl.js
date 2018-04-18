@@ -8,7 +8,7 @@ cc.Class({
     },
 
     // use this for initialization
-    onLoad: function (){
+    guaGuaKaBegin: function (){
         this.node.on(cc.Node.EventType.TOUCH_START, this._onTouchBegin, this);
         this.node.on(cc.Node.EventType.TOUCH_MOVE, this._onTouchMoved, this);
         this.node.on(cc.Node.EventType.TOUCH_END, this._onTouchEnd, this);

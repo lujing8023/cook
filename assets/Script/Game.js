@@ -34,17 +34,17 @@ cc.Class({
             type: cc.SpriteFrame,
             default: [],
         },
-        picVegeFram:{
-            type: cc.spriteFrame,
+        picVegetableFram:{
+            type: cc.SpriteFrame,
             default: [],
         }
 
     },
     onLoad: function () {
         /////////////关闭面包节点和刮刮乐按钮
-        this.rsultLabel.active = false;
-        this.mask.active = false;
         this.ndBread.active = false;
+        this.rsultLabel.node.active = false;
+        this.mask.node.active = false;
         
         this.colliderCtl = this.addComponent("ColliderCtl").init(this);
         //picFramCtl
@@ -120,14 +120,22 @@ cc.Class({
                     this.destroyFunc();
                     this.ndHotBread.active = true;
                     this.upTouch();
-                    cc.log("现在是烤面包阶段")
+                    cc.log("现在是烤面包阶段");
                 }else{
                     this.ndHotBread.active = false;
                     this.ndJame.active = true;
-                    cc.log("现在是选果酱阶段")
+                    this.touchOff();
+                    cc.log("现在是选果酱阶段");
                 }
             }else{
                 this.touchBegin()
+
+                /////////////
+                this.ndBread.active = true;
+                this.rsultLabel.node.active = true;
+                this.mask.node.active = true;
+
+                /////////////
                 //this.numRem == 5
                 //进行涂抹面包阶段
                 this.ndJame.active = false

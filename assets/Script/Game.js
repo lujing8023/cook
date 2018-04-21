@@ -48,7 +48,7 @@ cc.Class({
         
         this.colliderCtl = this.addComponent("ColliderCtl").init(this);
         //picFramCtl
-        this.picArr = [this.picFram, this.picBreadFram ,null , null , null , ];
+        this.picArr = [this.picFram, this.picBreadFram ,null , null , null , null , this.picVegetableFram];
         this.upUi();
         this.colliderFunc();
         this.ndP.active = false;
@@ -129,28 +129,29 @@ cc.Class({
                 }
             }else{
                 this.touchBegin()
-
                 /////////////
                 this.ndBread.active = true;
                 this.rsultLabel.node.active = true;
                 this.mask.node.active = true;
-
                 /////////////
                 //this.numRem == 5
                 //进行涂抹面包阶段
-                this.ndJame.active = false
+                this.ndJame.active = false;
+                
+                this.numRem += 1;
             }
-        }else{
+        }else{//步骤6
             if (this.numRem % 2 == 1) {
-                this.destroyFunc();
+                cc.log("this.numRem什么阶段",this.numRem);
                 this.ndListPar.active = true;
+                this.destroyFunc();
                 this.ndListParTwo.active = false;
                 this.upDataPic();
             } else {
                 // this.numRem += 1;
+                this.ndListParTwo.active = true;
                 this.destroyFunc();
                 this.ndListPar.active = false;
-                this.ndListParTwo.active = true;
                 cc.log("active", this.ndListParTwo.active);
                 this.upDataPic();
             }
@@ -178,6 +179,7 @@ cc.Class({
             this.ndList.removeChild();
         } else {
             this.ndListTwo.removeChild();
+            
         }
         // while (this.ndList.children.length > 0) {
         //     this.ndList.children[0].removeFromParent();

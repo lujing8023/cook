@@ -2,6 +2,9 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
+        ndZhenban       :   cc.Node,
+        ndKnife         :   cc.Node,
+        ndLine          :   cc.Node,
         ndHotBread      :   cc.Node,
         ndJameBottle    :   cc.Node,
         ndJame          :   cc.Node,
@@ -137,16 +140,19 @@ cc.Class({
                 //this.numRem == 5
                 //进行涂抹面包阶段
                 this.ndJame.active = false;
-                
                 this.numRem += 1;
-            }
-        }else{//步骤6
-            if (this.numRem % 2 == 1) {
-                cc.log("this.numRem什么阶段",this.numRem);
+                 //关闭所有的果酱汉堡盘子（显示刀和砧板）
+                }
+            }else{//步骤6
+                if (this.numRem % 2 == 1) {
+                this.touchOff();
+                this.upKnife();
+                cc.log("this.numRem什么阶段",this.numRem);//this.nuRem == 7选蔬菜
                 this.ndListPar.active = true;
                 this.destroyFunc();
                 this.ndListParTwo.active = false;
                 this.upDataPic();
+               
             } else {
                 // this.numRem += 1;
                 this.ndListParTwo.active = true;
@@ -161,7 +167,6 @@ cc.Class({
     upDataPic: function () {
         let picFram = this.picArr[this.numRem - 1]
         _.times(picFram.length, (i) => {
-            if (this.numRem % 2 == 0) {
                 let node = cc.instantiate(this.nd_P);
                 node.active = true;
                 node.getComponent(cc.Sprite).spriteFrame = picFram[i];
@@ -171,12 +176,25 @@ cc.Class({
                 } else {
                     this.ndList.addChild(node);
                 }
-            }
         })
+    },
+    //关闭所有的果酱汉堡盘子（显示刀和砧板）
+    upKnife:function(){
+        this.ndChoose.getChildByName("1").active = false;
+        this.ndBread.active = false;
+        this.ndJameBottle.active = false;
+        this.ndChoose.getChildByName("6").active = true;
+        this.ndZhenban.active = true;
+        this.ndKnife.active = true;
+        this.ndLine.active = true
+
     },
     destroyFunc: function () {
         if (this.numRem % 2 == 1) {
-            this.ndList.removeChild();
+            while (this.ndList.children.length>0){
+                this.ndList.children[0].removeFromParent()
+            }
+            // this.ndList.removeChild();
         } else {
             this.ndListTwo.removeChild();
             

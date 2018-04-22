@@ -2,6 +2,7 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
+        testNode        :   cc.Node,
         ndZhenban       :   cc.Node,
         ndKnife         :   cc.Node,
         ndLine          :   cc.Node,
@@ -178,11 +179,15 @@ cc.Class({
                
                 }else{
                 // this.numRem += 1;
-                this.ndListParTwo.active = true;
-                this.destroyFunc();
-                this.ndListPar.active = false;
-                cc.log("active", this.ndListParTwo.active);
-                this.upDataPic();
+                if(this.numRem == 8){
+                    this.vegetableToham();
+                }else{
+                    this.ndListParTwo.active = true;
+                    this.destroyFunc();
+                    this.ndListPar.active = false;
+                    cc.log("active", this.ndListParTwo.active);
+                    this.upDataPic();
+                }
 
             }
             cc.log("【记录步骤的数字】",this.numRem)
@@ -224,13 +229,24 @@ cc.Class({
         this.ndChoose.getChildByName("6").active = true;
         this.ndZhenban.active = true;
         this.ndKnife.active = true;
-        this.ndLine.active = true;
+        // this.ndLine.active = true;
 
         //开启触摸
         this.ndZhenban.on(cc.Node.EventType.TOUCH_START, function (event) {
             cc.log("【触摸开始】")
             this.cutMove();
         }, this);
+    },
+    vegetableToham:function(){
+        this.ndChoose.getChildByName("1").active = true;
+        this.ndBread.active = true;
+        this.ndZhenban.active = false;
+        this.ndKnife.active = false;
+        //把切好的东西放入汉堡
+        // let vegetabalIns = cc.instantiate(this.ndChoose.getChildByName("6").children[0]);
+        // this.ndChoose.getChildByName("6").children[0].removeFromParent();
+        // vegetabalIns.getComponent(cc.Node).scale = 0.1
+        // this.ndBread.addChild(vegetabalIns);
     },
     destroyFunc: function () {
         if (this.numRem % 2 == 1) {
@@ -372,10 +388,10 @@ cc.Class({
             var locationY = event.getDeltaY() < 0 ? event.getDeltaY() : 0;  //获取鼠标移动的距离
             self.knifeY += locationY;
             self.ndKnife.setPosition(self.knifeX, self.knifeY);             //knife实时的位置赋值
-            var knifeLine = self.ndLine.getComponent(cc.Graphics);       //绘画接口
-            knifeLine.moveTo(self.knifeX, self.firstPosition);              //移动
-            knifeLine.lineTo(self.knifeX, self.knifeY);                     //开始画线
-            knifeLine.stroke();
+            // var knifeLine = self.ndLine.getComponent(cc.Graphics);       //绘画接口
+            // knifeLine.moveTo(self.knifeX, self.firstPosition);              //移动
+            // knifeLine.lineTo(self.knifeX, self.knifeY);                     //开始画线
+            // knifeLine.stroke();
             let maxY = self.objPosition.posY
             if (self.ndKnife.y < -maxY) {                                    //判断y进行knife的换位置
                 // if (self.knifeX >= 200) {
@@ -388,7 +404,7 @@ cc.Class({
                     let actionBy = cc.moveTo(1, cc.p(self.objPosition.posX, self.objPosition.posY));
                     self.ndZhenban.off(cc.Node.EventType.TOUCH_MOVE, this.cutFunc, this)
                     self.ndKnife.runAction(actionBy);                 //位置赋值
-                    knifeLine.clear(true);                                      //清除线条
+                    // knifeLine.clear(true);                                      //清除线条
                 } else {
                     if(this.numStep == 2){
                         self.moveFun.moveFun(this.numStep);                                     ////////////////////////////////切完移动
@@ -397,7 +413,7 @@ cc.Class({
                         let actionBy = cc.moveTo(1, cc.p(self.objPosition.posX, self.objPosition.posY));
                         self.ndZhenban.off(cc.Node.EventType.TOUCH_MOVE, this.cutFunc, this)
                         self.ndKnife.runAction(actionBy);                 //位置赋值
-                        knifeLine.clear(true);
+                        // knifeLine.clear(true);
                         
                     }else{
                         this.ndZhenban.off(cc.Node.EventType.TOUCH_START, function (event) {

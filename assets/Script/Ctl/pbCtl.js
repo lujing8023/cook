@@ -8,6 +8,9 @@ cc.Class({
         nd2         :       cc.Node,
         nd3         :       cc.Node,
     },
+    onLoad:function(){
+        this.objPosition = {};
+    },
     moveFun:function(numStep){
         // this.getPosition();
         if(numStep == 1){
@@ -27,8 +30,11 @@ cc.Class({
 
     getPosition:function(numStep){
         if(numStep == 1){
-            let nd1PosX = this.nd1.getPosition().x + this.nd1.width/2;
+            // 
+            let nd1PosX = this.nd1.getPosition().x+ this.nd1.width;
+            let nd1Pos = this.nd1.getPosition().x;
             let nd1PosY = this.nd1.getPosition().y + this.nd1.height/2;
+            cc.log("nd1Pos",nd1Pos);
             cc.log("nd1PosX",nd1PosX);
             cc.log("nd1PosY",nd1PosY);
             this.objPosition.posX = nd1PosX;

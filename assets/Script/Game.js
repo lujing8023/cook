@@ -42,7 +42,15 @@ cc.Class({
             type: cc.SpriteFrame,
             default: [],
         },
+        picMetFram:{
+            type: cc.SpriteFrame,
+            default: [],
+        },
         PbListCtl: {
+            type: cc.Prefab,
+            default: []
+        },
+        PbListMet: {
             type: cc.Prefab,
             default: []
         },
@@ -63,7 +71,7 @@ cc.Class({
         
         this.colliderCtl = this.addComponent("ColliderCtl").init(this);
         //picFramCtl
-        this.picArr = [this.picFram, this.picBreadFram ,null , null , null , null , this.picVegetableFram];
+        this.picArr = [this.picFram, this.picBreadFram ,null , null , null , null , this.picVegetableFram , this.picMetFram];
         this.upUi();
         this.colliderFunc();
         this.ndP.active = false;
@@ -168,7 +176,7 @@ cc.Class({
                 this.ndListParTwo.active = false;
                 this.upDataPic();
                
-            } else {
+                }else{
                 // this.numRem += 1;
                 this.ndListParTwo.active = true;
                 this.destroyFunc();
@@ -231,8 +239,9 @@ cc.Class({
             }
             // this.ndList.removeChild();
         } else {
-            this.ndListTwo.removeChild();
-            
+            while (this.ndListTwo.children.length>0){
+                this.ndListTwo.children[0].removeFromParent()
+            }
         }
         // while (this.ndList.children.length > 0) {
         //     this.ndList.children[0].removeFromParent();
@@ -245,7 +254,11 @@ cc.Class({
     eventTargetTwo:function(event){
         let ndName = event.target.parent.name - 0;
         cc.log("【点击按钮后的获取按钮名字】",ndName);
-        this.preNode = cc.instantiate(this.PbListCtl[ndName]);
+        if(this.ndListParTwo.active == false){
+            this.preNode = cc.instantiate(this.PbListCtl[ndName]);
+        }else{
+            this.preNode = cc.instantiate(this.PbListMet[ndName]);
+        }
         if(this.ndChoose.getChildByName("6").children.length == 1){
             this.ndChoose.getChildByName("6").children[0].removeFromParent();
             this.ndChoose.getChildByName("6").addChild(this.preNode);

@@ -8,7 +8,9 @@ cc.Class({
 
 
     onLoad: function () {
-
+        cc.director.preloadScene("Game", function () {
+            cc.log("Next scene preloaded");
+        });
     },
 
     onButtonClick: function (event, cb) {

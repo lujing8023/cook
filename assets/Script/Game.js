@@ -55,6 +55,10 @@ cc.Class({
             type: cc.Prefab,
             default: []
         },
+        picJamPic:{
+            type: cc.SpriteFrame,
+            default: [],
+        },
         //添加类型
         addType      : 1,
 
@@ -63,14 +67,15 @@ cc.Class({
 
     },
     onLoad: function () {
+        
         //引入预设的类
         this._compbFun = this.node.addComponent("pbCtl")
         //关闭面包节点和刮刮乐按钮
         this.ndBread.active = false;
-        this.rsultLabel.node.active = false;
+        // this.rsultLabel.node.active = false;
         this.mask.node.active = false;
         
-        this.colliderCtl = this.addComponent("ColliderCtl").init(this);
+        this.colliderCtl = this.ndBread.getComponent("ColliderCtl").init(this);
         //picFramCtl
         this.picArr = [this.picFram, this.picBreadFram ,null , null , null , null , this.picVegetableFram , this.picMetFram];
         this.upUi();
@@ -105,6 +110,7 @@ cc.Class({
                 // cc.log("选第一种果酱")
                 this.ndJameBottle.active = true;
                 this.ndJame.active       = false;
+                this.mask.node.children[0].getComponent(cc.Sprite).spriteFrame = this.picJamPic[0]
                 break;
             case "jam2":
                 // this.nsdJame.active = true;
@@ -113,6 +119,7 @@ cc.Class({
                 // this.ndChoose.getChildByName("4").getComponent(cc.Sprite).spriteFrame = jam2Spri;
                 this.ndJameBottle.active = true;
                 this.ndJame.active       = false;
+                this.mask.children[0].getComponent(cc.Sprite).spriteFrame = this.picJamPic[1]
                 break;
             case "next":
                 this.checkPic();
@@ -147,6 +154,7 @@ cc.Class({
                     cc.log("现在是烤面包阶段");
                 }else{
                     this.ndHotBread.active = false;
+                    this.ndBread.setPosition(0 , 0)
                     this.ndJame.active = true;
                     this.touchOff();
                     cc.log("现在是选果酱阶段");
@@ -155,7 +163,7 @@ cc.Class({
                 this.touchBegin()
                 /////////////
                 this.ndBread.active = true;
-                this.rsultLabel.node.active = true;
+                // this.rsultLabel.node.active = true;
                 this.mask.node.active = true;
                 /////////////
                 //this.numRem == 5
@@ -242,11 +250,10 @@ cc.Class({
         this.ndBread.active = true;
         this.ndZhenban.active = false;
         this.ndKnife.active = false;
-        //把切好的东西放入汉堡
-        // let vegetabalIns = cc.instantiate(this.ndChoose.getChildByName("6").children[0]);
-        // this.ndChoose.getChildByName("6").children[0].removeFromParent();
-        // vegetabalIns.getComponent(cc.Node).scale = 0.1
-        // this.ndBread.addChild(vegetabalIns);
+        let vegetabalIns = cc.instantiate(this.ndChoose.getChildByName("6").children[0]);
+        this.ndChoose.getChildByName("6").children[0].removeFromParent();
+        vegetabalIns.scale = 1;
+        this.ndBread.addChild(vegetabalIns);
     },
     destroyFunc: function () {
         if (this.numRem % 2 == 1) {

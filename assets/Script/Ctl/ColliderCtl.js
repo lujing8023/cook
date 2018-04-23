@@ -14,7 +14,12 @@ cc.Class({
     },
     onCollisionEnter: function (other, self) {
         cc.log("碰撞")
-        this.node.setPosition(0,-213);
         this._Target.touchOff();
+        let actionBy = cc.moveTo(1, cc.p(0, -300));
+        this.node.runAction(actionBy);
+        this.scheduleOnce(function() {
+            // 这里的 this 指向 component
+            this.node.runAction(cc.moveTo(1, cc.p(0, -100)));
+        }, 2);
     },
 });

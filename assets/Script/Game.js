@@ -2,6 +2,7 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
+        picJamOne       :   cc.spriteFrame,
         ndBreadUp       :   cc.Node,
         ndNextBtn       :   cc.Node,
         ndBackBtn       :   cc.Node,
@@ -26,7 +27,6 @@ cc.Class({
         numRem          :   0,
         numChoose       :   "1",
         lbMes           :   cc.Label,
-
         /////////////////////////////(刮刮卡)
         rsultLabel      :   cc.Label,
         mask            :   cc.Mask,
@@ -351,7 +351,7 @@ cc.Class({
     upTouch: function () {
         this.node.on('touchmove', (touch) => {
             let location = touch.getLocation();
-            let post = this.node.convertToNodeSpaceAR(location)
+            let post = this.ndChoose.convertToNodeSpaceAR(location)
             // cc.log("世界坐标",post)
             this.ndBread.setPosition(post.x, post.y);
         })
@@ -384,19 +384,19 @@ cc.Class({
         cc.log('touchBegin');
 
         var point = event.touch.getLocation();
-        point = this.node.convertToNodeSpaceAR(point);
+        point = this.ndBread.convertToNodeSpaceAR(point);
         this._addCircle(point);
     },
 
     _onTouchMoved:function (event) {
         var point = event.touch.getLocation();
-        point = this.node.convertToNodeSpaceAR(point);
+        point = this.ndBread.convertToNodeSpaceAR(point);
         this._addCircle(point);
     },
 
     _onTouchEnd:function (event) {
         var point = event.touch.getLocation();
-        point = this.node.convertToNodeSpaceAR(point);
+        point = this.ndBread.convertToNodeSpaceAR(point);
         this._addCircle(point);
     },
 

@@ -2,7 +2,9 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
-        testNode        :   cc.Node,
+        ndBreadUp       :   cc.Node,
+        ndNextBtn       :   cc.Node,
+        ndBackBtn       :   cc.Node,
         ndZhenban       :   cc.Node,
         ndKnife         :   cc.Node,
         ndLine          :   cc.Node,
@@ -23,7 +25,7 @@ cc.Class({
         ndListTwo       :   cc.Node,
         numRem          :   0,
         numChoose       :   "1",
-
+        lbMes           :   cc.Label,
 
         /////////////////////////////(刮刮卡)
         rsultLabel      :   cc.Label,
@@ -77,7 +79,7 @@ cc.Class({
         
         this.colliderCtl = this.ndBread.getComponent("ColliderCtl").init(this);
         //picFramCtl
-        this.picArr = [this.picFram, this.picBreadFram ,null , null , null , null , this.picVegetableFram , this.picMetFram];
+        this.picArr = [this.picFram, this.picBreadFram ,null , null , null , null , this.picVegetableFram , null , this.picMetFram , null , null];
         this.upUi();
         this.colliderFunc();
         this.ndP.active = false;
@@ -119,7 +121,7 @@ cc.Class({
                 // this.ndChoose.getChildByName("4").getComponent(cc.Sprite).spriteFrame = jam2Spri;
                 this.ndJameBottle.active = true;
                 this.ndJame.active       = false;
-                this.mask.children[0].getComponent(cc.Sprite).spriteFrame = this.picJamPic[1]
+                this.mask.node.children[0].getComponent(cc.Sprite).spriteFrame = this.picJamPic[1]
                 break;
             case "next":
                 this.checkPic();
@@ -146,20 +148,20 @@ cc.Class({
         }
         if(this.numRem == 3 || this.numRem == 4 || this.numRem == 5){
             if(this.numRem == 3 || this.numRem == 4){
-                if(this.numRem == 3){
+                    if(this.numRem == 3){
                     this.ndListParTwo.active = false;
                     this.destroyFunc();
                     this.ndHotBread.active = true;
                     this.upTouch();
                     cc.log("现在是烤面包阶段");
-                }else{
+                    }else{
                     this.ndHotBread.active = false;
                     this.ndBread.setPosition(0 , 0)
                     this.ndJame.active = true;
                     this.touchOff();
                     cc.log("现在是选果酱阶段");
                 }
-            }else{
+                }else{
                 this.touchBegin()
                 /////////////
                 this.ndBread.active = true;
@@ -174,27 +176,70 @@ cc.Class({
                 }
             }else{//步骤6
                 if (this.numRem % 2 == 1) {
-                this.onDestroy()
-                this.touchOff();
-                this.upKnife();
-                //变换第二种类型
-                this.addType = 2
-                cc.log("this.numRem什么阶段",this.numRem);//this.nuRem == 7选蔬菜
-                this.ndListPar.active = true;
-                this.destroyFunc();
-                this.ndListParTwo.active = false;
-                this.upDataPic();
+                    if(this.numRem == 9){
+                        this.onDestroy()
+                        this.touchOff();
+                        this.upKnife();
+                        //变换第二种类型
+                        this.addType = 2
+                        cc.log("this.numRem什么阶段",this.numRem);
+                        this.ndListPar.active = false;
+                        this.ndListParTwo.active = true;
+                        while (this.ndListTwo.children.length>0){
+                            this.ndListTwo.children[0].removeFromParent()
+                        }
+                        this.upDataPic();
+                    }else{
+                        // if(this.nuRem == 7){
+                            this.onDestroy()
+                            this.touchOff();
+                            this.upKnife();
+                            //变换第二种类型
+                            this.addType = 2
+                            cc.log("this.numRem什么阶段",this.numRem);//this.nuRem == 7选蔬菜
+                            this.ndListPar.active = true;
+                            this.destroyFunc();
+                            this.ndListParTwo.active = false;
+                            this.upDataPic();
+                        // }
+                    }
                
                 }else{
                 // this.numRem += 1;
-                if(this.numRem == 8){
-                    this.vegetableToham();
-                }else{
-                    this.ndListParTwo.active = true;
-                    this.destroyFunc();
-                    this.ndListPar.active = false;
-                    cc.log("active", this.ndListParTwo.active);
-                    this.upDataPic();
+                    if(this.numRem == 10){
+                        ///////////////////////////////////////////////////////////
+                        this.ndChoose.getChildByName("1").active = true;
+                        this.ndBread.active = true;
+                        this.ndZhenban.active = false;
+                        this.ndKnife.active = false;
+                        this.ndListParTwo.active = false;
+                        let metIns = cc.instantiate(this.ndChoose.getChildByName("6").children[0]);
+                        // this.ndChoose.getChildByName("6").children[1].removeFromParent();
+                        this.ndChoose.getChildByName("6").children[0].removeFromParent();
+                        metIns.scale = 0.3;
+                        this.ndBread.addChild(metIns);
+                        let ndBreadUPIns = cc.instantiate(this.ndBreadUp);
+                        ndBreadUPIns.children[0].getComponent(cc.Sprite).spriteFrame = this.ndBread.getComponent(cc.Sprite).spriteFrame
+                        this.ndBread.addChild(ndBreadUPIns);
+                        ndBreadUPIns.setPosition(0 , 100);
+                        //最后显示完成
+                        this.ndBread.setPosition(-400 , -100);
+                        this.ndChoose.children[0].setPosition(-400 , 0);
+                        this.ndBox.active = true;
+                        this.lbMes.string = "完成！";
+                        this.ndBox.setPosition(150 , 0);
+                        this.ndNextBtn.active = false;
+                        this.ndBackBtn.active = false;
+                    }else{
+                        if(this.numRem == 8){
+                        this.vegetableToham();
+                        }else{
+                        this.ndListParTwo.active = true;
+                        this.destroyFunc();
+                        this.ndListPar.active = false;
+                        cc.log("active", this.ndListParTwo.active);
+                        this.upDataPic();
+                    }
                 }
 
             }
@@ -245,14 +290,17 @@ cc.Class({
             this.cutMove();
         }, this);
     },
+    //把切好的放入汉堡
     vegetableToham:function(){
+        this.mask.inverted = true;
         this.ndChoose.getChildByName("1").active = true;
         this.ndBread.active = true;
         this.ndZhenban.active = false;
         this.ndKnife.active = false;
+        this.ndListPar.active = false;
         let vegetabalIns = cc.instantiate(this.ndChoose.getChildByName("6").children[0]);
         this.ndChoose.getChildByName("6").children[0].removeFromParent();
-        vegetabalIns.scale = 1;
+        vegetabalIns.scale = 0.4;
         this.ndBread.addChild(vegetabalIns);
     },
     destroyFunc: function () {

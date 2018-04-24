@@ -897,7 +897,7 @@
     },
     "_enabled": true,
     "_spriteFrame": {
-      "__uuid__": "2f37f58c-33a6-43fb-91a7-308429c1230c"
+      "__uuid__": "dfacb540-1634-4c24-b968-1e7e816ef4d9"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -1664,7 +1664,7 @@
       "__uuid__": "3d708ce6-9c63-4c80-b012-6fcdd50bb8ca"
     },
     "_N$disabledSprite": {
-      "__uuid__": "29158224-f8dd-4661-a796-1ffab537140e"
+      "__uuid__": "3d708ce6-9c63-4c80-b012-6fcdd50bb8ca"
     },
     "_N$target": {
       "__id__": 39

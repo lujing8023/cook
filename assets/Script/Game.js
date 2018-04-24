@@ -63,20 +63,17 @@ cc.Class({
         },
         //添加类型
         addType      : 1,
-
         //刀移动
         numStep      : 1,
-
     },
     onLoad: function () {
         
         //引入预设的类
-        this._compbFun = this.node.addComponent("pbCtl")
+        this._compbFun = this.node.addComponent("pbCtl");
         //关闭面包节点和刮刮乐按钮
         this.ndBread.active = false;
         // this.rsultLabel.node.active = false;
         this.mask.node.active = false;
-        
         this.colliderCtl = this.ndBread.getComponent("ColliderCtl").init(this);
         //picFramCtl
         this.picArr = [this.picFram, this.picBreadFram ,null , null , null , null , this.picVegetableFram , null , this.picMetFram , null , null];
@@ -107,21 +104,18 @@ cc.Class({
                 cc.director.loadScene("Main");
                 break;
             case "jam1":
-                // this.ndJame.active = true;
-                // let jam1Spri = this.ndJam1.getComponent(cc.Sprite).spriteFrame;
                 // cc.log("选第一种果酱")
                 this.ndJameBottle.active = true;
                 this.ndJame.active       = false;
-                this.mask.node.children[0].getComponent(cc.Sprite).spriteFrame = this.picJamPic[0]
+                this.mask.node.children[0].getComponent(cc.Sprite).spriteFrame = this.picJamPic[0];
+                this.ndNextBtn.getComponent(cc.Button).interactable = true;
                 break;
             case "jam2":
-                // this.nsdJame.active = true;
-                // let jam2Spri = this.ndJam2.getComponent(cc.Sprite).spriteFrame;
                 // cc.log("选第二种果酱")
-                // this.ndChoose.getChildByName("4").getComponent(cc.Sprite).spriteFrame = jam2Spri;
                 this.ndJameBottle.active = true;
                 this.ndJame.active       = false;
-                this.mask.node.children[0].getComponent(cc.Sprite).spriteFrame = this.picJamPic[1]
+                this.mask.node.children[0].getComponent(cc.Sprite).spriteFrame = this.picJamPic[1];
+                this.ndNextBtn.getComponent(cc.Button).interactable = true;
                 break;
             case "next":
                 this.checkPic();
@@ -155,28 +149,33 @@ cc.Class({
                     this.upTouch();
                     cc.log("现在是烤面包阶段");
                     }else{
-                    this.ndHotBread.active = false;
-                    this.ndBread.setPosition(0 , 0)
-                    this.ndJame.active = true;
-                    this.touchOff();
-                    cc.log("现在是选果酱阶段");
+                        // if(this.ndJame.active == false){
+                            this.ndHotBread.active = false;
+                            this.ndBread.setPosition(0 , 0)
+                            this.ndJame.active = true;
+                            if(this.ndJame.active == true){
+                                this.ndNextBtn.getComponent(cc.Button).interactable = false;
+                            }
+                            this.touchOff();
+                            cc.log("现在是选果酱阶段");//果酱已经出来
+                            cc.log("【看一下两个数据】",this.numChoose , this.numRem)
+                        // }
+
                 }
                 }else{
-                this.touchBegin()
-                /////////////
-                this.ndBread.active = true;
-                // this.rsultLabel.node.active = true;
-                this.mask.node.active = true;
-                /////////////
-                //this.numRem == 5
-                //进行涂抹面包阶段
-                this.ndJame.active = false;
-                this.numRem += 1;
-                 //关闭所有的果酱汉堡盘子（显示刀和砧板）
+                    this.touchBegin()
+                    this.ndBread.active = true;
+                    // this.rsultLabel.node.active = true;
+                    this.mask.node.active = true;
+                    //this.numRem == 5
+                    //进行涂抹面包阶段
+                    this.ndJame.active = false;
+                    this.numRem += 1;
                 }
             }else{//步骤6
                 if (this.numRem % 2 == 1) {
                     if(this.numRem == 9){
+                        this.ndNextBtn.getComponent(cc.Button).interactable = false;
                         this.onDestroy()
                         this.touchOff();
                         this.upKnife();
@@ -190,24 +189,21 @@ cc.Class({
                         }
                         this.upDataPic();
                     }else{
-                        // if(this.nuRem == 7){
-                            this.onDestroy()
+                            this.ndNextBtn.getComponent(cc.Button).interactable = false;
+                            this.onDestroy();
                             this.touchOff();
                             this.upKnife();
-                            //变换第二种类型
-                            this.addType = 2
-                            cc.log("this.numRem什么阶段",this.numRem);//this.nuRem == 7选蔬菜
+                            this.addType = 2;
+                            cc.log("this.numRem什么阶段",this.numRem);//this.nuRem == 7
                             this.ndListPar.active = true;
                             this.destroyFunc();
                             this.ndListParTwo.active = false;
                             this.upDataPic();
-                        // }
                     }
                
                 }else{
                 // this.numRem += 1;
                     if(this.numRem == 10){
-                        ///////////////////////////////////////////////////////////
                         this.ndChoose.getChildByName("1").active = true;
                         this.ndBread.active = true;
                         this.ndZhenban.active = false;
@@ -234,11 +230,11 @@ cc.Class({
                         if(this.numRem == 8){
                         this.vegetableToham();
                         }else{
-                        this.ndListParTwo.active = true;
-                        this.destroyFunc();
-                        this.ndListPar.active = false;
-                        cc.log("active", this.ndListParTwo.active);
-                        this.upDataPic();
+                            this.ndListParTwo.active = true;
+                            this.destroyFunc();
+                            this.ndListPar.active = false;
+                            cc.log("active", this.ndListParTwo.active);
+                            this.upDataPic();
                     }
                 }
 
@@ -282,9 +278,6 @@ cc.Class({
         this.ndChoose.getChildByName("6").active = true;
         this.ndZhenban.active = true;
         this.ndKnife.active = true;
-        // this.ndLine.active = true;
-
-        //开启触摸
         this.ndZhenban.on(cc.Node.EventType.TOUCH_START, function (event) {
             cc.log("【触摸开始】")
             this.cutMove();
@@ -314,9 +307,6 @@ cc.Class({
                 this.ndListTwo.children[0].removeFromParent()
             }
         }
-        // while (this.ndList.children.length > 0) {
-        //     this.ndList.children[0].removeFromParent();
-        // }
     },
     eventTarget: function (event) {
         let ndTarget = event.target.parent;
@@ -324,6 +314,7 @@ cc.Class({
     },
     eventTargetTwo:function(event){
         let ndName = event.target.parent.name - 0;
+        this.ndNextBtn.getComponent(cc.Button).interactable = true;
         cc.log("【点击按钮后的获取按钮名字】",ndName);
         if(this.ndListParTwo.active == false){
             this.preNode = cc.instantiate(this.PbListCtl[ndName]);
@@ -347,12 +338,10 @@ cc.Class({
         
     },
     //Bread Follow
-    //跟随问题没解决
     upTouch: function () {
         this.node.on('touchmove', (touch) => {
             let location = touch.getLocation();
             let post = this.ndChoose.convertToNodeSpaceAR(location)
-            // cc.log("世界坐标",post)
             this.ndBread.setPosition(post.x, post.y);
         })
     },
@@ -363,7 +352,6 @@ cc.Class({
         var manager = cc.director.getCollisionManager();
             manager.enabled = true;
     },
-    ////////////////////////////
     //刮刮卡
     touchBegin:function(){
         this.node.on(cc.Node.EventType.TOUCH_START, this._onTouchBegin, this);
@@ -380,9 +368,7 @@ cc.Class({
     },
 
     _onTouchBegin:function (event) {
-
         cc.log('touchBegin');
-
         var point = event.touch.getLocation();
         point = this.ndBread.convertToNodeSpaceAR(point);
         this._addCircle(point);
@@ -400,12 +386,6 @@ cc.Class({
         this._addCircle(point);
     },
 
-    _onTouchCancel:function (event) {
-        // var point = event.touch.getLocation();
-        // point = this.node.convertToNodeSpaceAR(point);
-        // this._addCircle(point);
-    },
-
     _addCircle:function (point) {
         var stencil = this.mask._clippingStencil;
         var color = cc.color(255, 255, 255, 0);
@@ -419,57 +399,38 @@ cc.Class({
         this.numStep = 1;
         this.moveFun = this.preNode.getComponent("pbCtl");
         // moveFun.moveFun();
-        //初始化knife位置
         this.objPosition = this.moveFun.getPosition(this.numStep);
         // this.ndcutLine.x   = moveFun.getPosition();
         this.ndKnife.setPosition(this.objPosition.posX, this.objPosition.posY);
-        // this.cutstar();
     },
-    // cutstar: function () {
-    //     this.ndZhenban.on(cc.Node.EventType.TOUCH_START, function (event) {
-    //         cc.log("【触摸开始】")
-    //         this.cutMove();
-    //     }, this);
-    // },
     
     cutMove: function () {
-        //this.knife
-        //this.cut
         var self = this;
         this.cutFunc = function (event) {
-            self.knifeX = self.objPosition.posX;                                   //knife纹理的x
-            self.knifeY = self.ndKnife.y;                                   //knife纹理的y
-            self.firstPosition = self.objPosition.posY;                            //设置knif的初始位置
-            var locationY = event.getDeltaY() < 0 ? event.getDeltaY() : 0;  //获取鼠标移动的距离
+            self.knifeX = self.objPosition.posX;
+            self.knifeY = self.ndKnife.y;
+            self.firstPosition = self.objPosition.posY;
+            var locationY = event.getDeltaY() < 0 ? event.getDeltaY() : 0; 
             self.knifeY += locationY;
-            self.ndKnife.setPosition(self.knifeX, self.knifeY);             //knife实时的位置赋值
-            // var knifeLine = self.ndLine.getComponent(cc.Graphics);       //绘画接口
-            // knifeLine.moveTo(self.knifeX, self.firstPosition);              //移动
-            // knifeLine.lineTo(self.knifeX, self.knifeY);                     //开始画线
-            // knifeLine.stroke();
+            self.ndKnife.setPosition(self.knifeX, self.knifeY);
             let maxY = self.objPosition.posY
-            if (self.ndKnife.y < -maxY) {                                    //判断y进行knife的换位置
-                // if (self.knifeX >= 200) {
-                //     self.ndcut.active = false;
-                // }
+            if (self.ndKnife.y < -maxY) {                                   
                 if (this.numStep == 1) {
-                    self.moveFun.moveFun(this.numStep);                                     ////////////////////////////////切完移动
+                    self.moveFun.moveFun(this.numStep);
                     this.numStep += 1;
-                    this.objPosition = this.moveFun.getPosition(this.numStep);                             //位置变化位置
+                    this.objPosition = this.moveFun.getPosition(this.numStep);                             
                     let actionBy = cc.moveTo(1, cc.p(self.objPosition.posX, self.objPosition.posY));
                     self.ndZhenban.off(cc.Node.EventType.TOUCH_MOVE, this.cutFunc, this)
-                    self.ndKnife.runAction(actionBy);                 //位置赋值
-                    // knifeLine.clear(true);                                      //清除线条
+                    self.ndKnife.runAction(actionBy);                 
+                    // knifeLine.clear(true);                                     
                 } else {
                     if(this.numStep == 2){
-                        self.moveFun.moveFun(this.numStep);                                     ////////////////////////////////切完移动
+                        self.moveFun.moveFun(this.numStep);                                     
                         this.numStep += 1;
-                        this.objPosition = this.moveFun.getPosition(this.numStep);                             //位置变化位置
+                        this.objPosition = this.moveFun.getPosition(this.numStep);                             
                         let actionBy = cc.moveTo(1, cc.p(self.objPosition.posX, self.objPosition.posY));
                         self.ndZhenban.off(cc.Node.EventType.TOUCH_MOVE, this.cutFunc, this)
-                        self.ndKnife.runAction(actionBy);                 //位置赋值
-                        // knifeLine.clear(true);
-                        
+                        self.ndKnife.runAction(actionBy);                  
                     }else{
                         this.ndZhenban.off(cc.Node.EventType.TOUCH_START, function (event) {
                             cc.log("【触摸开始】")
@@ -482,93 +443,3 @@ cc.Class({
         self.ndZhenban.on(cc.Node.EventType.TOUCH_MOVE, this.cutFunc, this)
     },
 });
-
-
-// cc.Class({
-//     extends: cc.Component,
-
-//     properties: {
-//         ndknife      : cc.Node,
-//         ndcut        : cc.Node,
-//         ndcutLine    : cc.Node,
-//         ndPbNode     : cc.Node,
-//         PbList: {
-//             type: cc.Prefab,
-//             default: []
-//         },
-//         lbTest       : cc.Label,
-//         numStep      : 1,
-//     },
-//     onLoad: function () {
-//         // this._compbFun = this.node.addComponent("pbFun");
-//     },
-//     onButtonClick: function () {
-//         this.ndPb = cc.instantiate(this.PbList[0]);
-//         this.ndPbNode.addChild(this.ndPb);
-//         this.moveFun = this.ndPb.getComponent("pbFun");
-//         // moveFun.moveFun();
-//         //初始化knife位置
-//         this.objPosition = this.moveFun.getPosition(this.numStep);
-//         // this.ndcutLine.x   = moveFun.getPosition();
-//         this.ndknife.setPosition(this.objPosition.posX, this.objPosition.posY);
-//         this.lbTest.node.active = false;
-//         this.cutstar();
-
-//     },
-//     cutstar: function () {
-//         this.ndcut.on(cc.Node.EventType.TOUCH_START, function (event) {
-//             cc.log("【触摸开始】")
-//             this.cutMove();
-//         }, this);
-//     },
-//     cutMove: function () {
-//         //this.knife
-//         //this.cut
-//         var self = this;
-//         this.cutFunc = function (event) {
-//             self.knifeX = self.objPosition.posX;                                   //knife纹理的x
-//             self.knifeY = self.ndknife.y;                                   //knife纹理的y
-//             self.firstPosition = self.objPosition.posY;                            //设置knif的初始位置
-//             var locationY = event.getDeltaY() < 0 ? event.getDeltaY() : 0;  //获取鼠标移动的距离
-//             self.knifeY += locationY;
-//             self.ndknife.setPosition(self.knifeX, self.knifeY);             //knife实时的位置赋值
-//             var knifeLine = self.ndcutLine.getComponent(cc.Graphics);       //绘画接口
-//             knifeLine.moveTo(self.knifeX, self.firstPosition);              //移动
-//             knifeLine.lineTo(self.knifeX, self.knifeY);                     //开始画线
-//             knifeLine.stroke();
-//             let maxY = self.objPosition.posY
-//             if (self.ndknife.y < -maxY) {                                    //判断y进行knife的换位置
-//                 // if (self.knifeX >= 200) {
-//                 //     self.ndcut.active = false;
-//                 // }
-//                 if (this.numStep == 1) {
-//                     self.moveFun.moveFun(this.numStep);                                     ////////////////////////////////切完移动
-//                     this.numStep += 1;
-//                     this.objPosition = this.moveFun.getPosition(this.numStep);                             //位置变化位置
-//                     let actionBy = cc.moveTo(1, cc.p(self.objPosition.posX, self.objPosition.posY));
-//                     self.ndcut.off(cc.Node.EventType.TOUCH_MOVE, this.cutFunc, this)
-//                     self.ndknife.runAction(actionBy);                 //位置赋值
-//                     knifeLine.clear(true);                                      //清除线条
-//                 } else {
-//                     if(this.numStep == 2){
-//                         self.moveFun.moveFun(this.numStep);                                     ////////////////////////////////切完移动
-//                         this.numStep += 1;
-//                         this.objPosition = this.moveFun.getPosition(this.numStep);                             //位置变化位置
-//                         let actionBy = cc.moveTo(1, cc.p(self.objPosition.posX, self.objPosition.posY));
-//                         self.ndcut.off(cc.Node.EventType.TOUCH_MOVE, this.cutFunc, this)
-//                         self.ndknife.runAction(actionBy);                 //位置赋值
-//                         knifeLine.clear(true);
-                        
-//                     }else{
-//                         this.ndcut.off(cc.Node.EventType.TOUCH_START, function (event) {
-//                             cc.log("【触摸开始】")
-//                             this.cutMove();
-//                         }, this);  
-//                     }
-//                 }
-//             }
-//         }
-//         self.ndcut.on(cc.Node.EventType.TOUCH_MOVE, this.cutFunc, this)
-//     },
-
-// });

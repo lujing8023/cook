@@ -2,6 +2,14 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
+        ndCancel        :   cc.Node,
+        ndSure          :   cc.Node,
+        audioSource: {
+            type: cc.AudioSource,
+            default: null
+        },
+        ndClose         :   cc.Node,
+        ndOpen          :   cc.Node,
         picJamOne       :   cc.spriteFrame,
         ndBreadUp       :   cc.Node,
         ndNextBtn       :   cc.Node,
@@ -66,8 +74,28 @@ cc.Class({
         //刀移动
         numStep      : 1,
     },
+    //音乐
+    play: function () {
+        this.audioSource.play();
+    },
+    pause: function () {
+        this.audioSource.pause();
+    },
+    upAudio:function(){
+        this.audio = cc.sys.localStorage.getItem("GameAudio", this.audio);
+        if(this.audio == "true"){
+            this.ndOpen.active  = false;
+            this.ndClose.active = true;
+            this.play();
+        }else{
+            this.ndOpen.active  = true;
+            this.ndClose.active = false;
+            this.pause();
+        }
+    },
     onLoad: function () {
-        
+        //音乐
+        this.upAudio();
         //引入预设的类
         this._compbFun = this.node.addComponent("pbCtl");
         //关闭面包节点和刮刮乐按钮
@@ -119,6 +147,20 @@ cc.Class({
                 break;
             case "next":
                 this.checkPic();
+                break;
+            case "stop":
+                this.ndClose.active = false;
+                this.ndOpen.active  = true;
+                this.pause();
+                this.audio = false;
+                cc.sys.localStorage.setItem("GameAudio", this.audio);
+                break;
+            case "continue":
+                this.ndClose.active = true;
+                this.ndOpen.active  = false;
+                this.play();
+                this.audio = true;
+                cc.sys.localStorage.setItem("GameAudio", this.audio);
                 break;
         }
     },
@@ -226,8 +268,8 @@ cc.Class({
                         this.ndBox.setPosition(150 , 0);
                         this.ndNextBtn.active = false;
                         this.ndBackBtn.active = false;
-                        this.ndBox.getChildByName("ndCancel").node.active = false;
-                        this.ndBox.getChildByName("ndSure").node.setPosition( 0 , -120);
+                        this.ndCancel.active = false;
+                        this.ndSure.setPosition( 0 , -120);
                     }else{
                         if(this.numRem == 8){
                         this.vegetableToham();

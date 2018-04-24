@@ -226,6 +226,8 @@ cc.Class({
                         this.ndBox.setPosition(150 , 0);
                         this.ndNextBtn.active = false;
                         this.ndBackBtn.active = false;
+                        this.ndBox.getChildByName("ndCancel").node.active = false;
+                        this.ndBox.getChildByName("ndSure").node.setPosition( 0 , -120);
                     }else{
                         if(this.numRem == 8){
                         this.vegetableToham();

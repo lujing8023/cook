@@ -2,6 +2,9 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
+        ndPeople        :   cc.Node,
+        ndMes           :   cc.Node,
+        ndLastMes       :   cc.Node,
         ndCancel        :   cc.Node,
         ndSure          :   cc.Node,
         audioSource: {
@@ -221,6 +224,10 @@ cc.Class({
                         this.onDestroy()
                         this.touchOff();
                         this.upKnife();
+                        this.ndZhenban.off(cc.Node.EventType.TOUCH_START, function (event) {
+                            cc.log("【触摸开始】")
+                            this.cutMove();
+                        }, this);
                         //变换第二种类型
                         this.addType = 2
                         cc.log("this.numRem什么阶段",this.numRem);
@@ -235,6 +242,10 @@ cc.Class({
                             this.onDestroy();
                             this.touchOff();
                             this.upKnife();
+                            this.ndZhenban.off(cc.Node.EventType.TOUCH_START, function (event) {
+                                cc.log("【触摸开始】")
+                                this.cutMove();
+                            }, this);
                             this.addType = 2;
                             cc.log("this.numRem什么阶段",this.numRem);//this.nuRem == 7
                             this.ndListPar.active = true;
@@ -254,18 +265,21 @@ cc.Class({
                         let metIns = cc.instantiate(this.ndChoose.getChildByName("6").children[0]);
                         // this.ndChoose.getChildByName("6").children[1].removeFromParent();
                         this.ndChoose.getChildByName("6").children[0].removeFromParent();
-                        metIns.scale = 0.3;
+                        metIns.scale = 0.5;
                         this.ndBread.addChild(metIns);
                         let ndBreadUPIns = cc.instantiate(this.ndBreadUp);
                         ndBreadUPIns.children[0].getComponent(cc.Sprite).spriteFrame = this.ndBread.getComponent(cc.Sprite).spriteFrame
                         this.ndBread.addChild(ndBreadUPIns);
-                        ndBreadUPIns.setPosition(0 , 100);
+                        ndBreadUPIns.setPosition(0 , 50);
                         //最后显示完成
-                        this.ndBread.setPosition(-400 , -100);
-                        this.ndChoose.children[0].setPosition(-400 , 0);
-                        this.ndBox.active = true;
-                        this.lbMes.string = "完成！";
-                        this.ndBox.setPosition(150 , 0);
+                        this.ndBread.setPosition(0 , 0);
+                        this.ndChoose.children[0].setPosition(0 , 0);
+                        this.ndLastMes.active = true;
+                        this.ndPeople.active = true;
+                        this.ndMes.active = true;
+                        // this.ndBox.active = true;
+                        // this.lbMes.string = "完成！";
+                        // this.ndBox.setPosition(150 , 0);
                         this.ndNextBtn.active = false;
                         this.ndBackBtn.active = false;
                         this.ndCancel.active = false;
@@ -285,6 +299,10 @@ cc.Class({
             }
             cc.log("【记录步骤的数字】",this.numRem)
         }
+    },
+    //最后按钮
+    buttonLast:function(){
+        cc.director.loadScene("Main")
     },
     upDataPic: function () {
         let picFram = this.picArr[this.numRem - 1]
@@ -322,10 +340,12 @@ cc.Class({
         this.ndChoose.getChildByName("6").active = true;
         this.ndZhenban.active = true;
         this.ndKnife.active = true;
-        this.ndZhenban.on(cc.Node.EventType.TOUCH_START, function (event) {
-            cc.log("【触摸开始】")
-            this.cutMove();
-        }, this);
+        if(this.numRem == 7){
+            this.ndZhenban.on(cc.Node.EventType.TOUCH_START, function (event) {
+                cc.log("【触摸开始】")
+                this.cutMove();
+            }, this);
+        }
     },
     //把切好的放入汉堡
     vegetableToham:function(){
@@ -337,7 +357,7 @@ cc.Class({
         this.ndListPar.active = false;
         let vegetabalIns = cc.instantiate(this.ndChoose.getChildByName("6").children[0]);
         this.ndChoose.getChildByName("6").children[0].removeFromParent();
-        vegetabalIns.scale = 0.4;
+        vegetabalIns.scale = 0.5;
         this.ndBread.addChild(vegetabalIns);
     },
     destroyFunc: function () {

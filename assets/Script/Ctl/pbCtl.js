@@ -14,11 +14,11 @@ cc.Class({
     moveFun:function(numStep){
         // this.getPosition();
         if(numStep == 1){
-            let action = cc.moveBy(0.6,cc.p(-100, 0));
+            let action = cc.moveBy(0.6,cc.p(-50, 0));
             this.nd1.runAction(action);
         }else{
             if(numStep == 2){
-                let action = cc.moveBy(0.6,cc.p(-50, 0));
+                let action = cc.moveBy(0.6,cc.p(-25, 0));
                 this.nd2.runAction(action);
             }else{
                 // let action = cc.moveBy(0.6,cc.p(-100, 0));

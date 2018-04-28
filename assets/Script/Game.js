@@ -2,6 +2,8 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
+        ndNextBtn2      :   cc.Node,
+        lbtixong        :   cc.Label,
         ndPeople        :   cc.Node,
         ndMes           :   cc.Node,
         ndLastMes       :   cc.Node,
@@ -97,6 +99,9 @@ cc.Class({
         }
     },
     onLoad: function () {
+        cc.director.preloadScene("Main", function () {
+            cc.log("Next scene preloaded");
+        });
         //音乐
         this.upAudio();
         //引入预设的类
@@ -140,6 +145,8 @@ cc.Class({
                 this.ndJame.active       = false;
                 this.mask.node.children[0].getComponent(cc.Sprite).spriteFrame = this.picJamPic[0];
                 this.ndNextBtn.getComponent(cc.Button).interactable = true;
+                this.lbtixong.string = "再点击下一步，进行涂抹果酱吧！"
+                this.ndNextBtn2.active = false;
                 break;
             case "jam2":
                 // cc.log("选第二种果酱")
@@ -147,10 +154,18 @@ cc.Class({
                 this.ndJame.active       = false;
                 this.mask.node.children[0].getComponent(cc.Sprite).spriteFrame = this.picJamPic[1];
                 this.ndNextBtn.getComponent(cc.Button).interactable = true;
+                this.lbtixong.string = "再点击下一步，进行涂抹果酱吧！"
+                this.ndNextBtn2.active = false;
                 break;
             case "next":
                 this.checkPic();
                 break;
+            case "next2":
+                let actionBy  = cc.rotateTo(0.1, -45);
+                let actionBy2 = cc.rotateTo(0.1, 0);
+                let plan3 = cc.repeat(cc.sequence(actionBy, actionBy2), 2);
+                this.ndMes.runAction(plan3);
+                break;    
             case "stop":
                 this.ndClose.active = false;
                 this.ndOpen.active  = true;
@@ -173,6 +188,11 @@ cc.Class({
         //获取盘子空节点的图片渲染
         let ndSpri = ndName.getComponent(cc.Sprite).spriteFrame;
         if (ndSpri == null) {
+            let actionBy  = cc.rotateTo(0.1, -45);
+            let actionBy2 = cc.rotateTo(0.1, 0);
+            let plan3 = cc.repeat(cc.sequence(actionBy, actionBy2), 2);
+            this.ndMes.runAction(plan3);
+            // this.ndMes.rotation = 0;
             cc.log("..............");
         } else {
             this.changeList();
@@ -183,6 +203,7 @@ cc.Class({
     changeList: function () {
         this.numRem += 1;
         if(this.numRem == 2){
+            this.lbtixong.string = "点击选一块你喜欢的面包呀（*^_^*）"
             this.ndBread.active = true;
         }
         if(this.numRem == 3 || this.numRem == 4 || this.numRem == 5){
@@ -193,13 +214,19 @@ cc.Class({
                     this.ndHotBread.active = true;
                     this.upTouch();
                     cc.log("现在是烤面包阶段");
+                    this.lbtixong.string = "烤面包咯~试着拖动面包到面包里里吧！"
                     }else{
                         // if(this.ndJame.active == false){
+                            this.lbtixong.string = "选一个喜欢的果酱吧！"
+                            // this.numRem += 1;
                             this.ndHotBread.active = false;
                             this.ndBread.setPosition(0 , 0)
                             this.ndJame.active = true;
                             if(this.ndJame.active == true){
                                 this.ndNextBtn.getComponent(cc.Button).interactable = false;
+                                this.ndNextBtn2.active = true;
+                                this.ndNextBtn2.active = true;
+
                             }
                             this.touchOff();
                             cc.log("现在是选果酱阶段");//果酱已经出来
@@ -208,6 +235,7 @@ cc.Class({
 
                 }
                 }else{
+                    this.lbtixong.string = "开始涂抹面包吧！（记得涂满呦~）"
                     this.touchBegin()
                     this.ndBread.active = true;
                     // this.rsultLabel.node.active = true;
@@ -220,6 +248,8 @@ cc.Class({
             }else{//步骤6
                 if (this.numRem % 2 == 1) {
                     if(this.numRem == 9){
+                        this.lbtixong.string = "选择一个喜欢的小肉吧！"
+                        this.ndNextBtn2.active = true;
                         this.ndNextBtn.getComponent(cc.Button).interactable = false;
                         this.onDestroy()
                         this.touchOff();
@@ -238,7 +268,9 @@ cc.Class({
                         }
                         this.upDataPic();
                     }else{
+                        this.lbtixong.string = "请选一个你喜欢的蔬菜吧！"
                             this.ndNextBtn.getComponent(cc.Button).interactable = false;
+                            this.ndNextBtn2.active = true;
                             this.onDestroy();
                             this.touchOff();
                             this.upKnife();
@@ -257,6 +289,7 @@ cc.Class({
                 }else{
                 // this.numRem += 1;
                     if(this.numRem == 10){
+                        this.lbtixong.string = "好像有点丑，再接再厉！（*^_^*）"
                         this.ndChoose.getChildByName("1").active = true;
                         this.ndBread.active = true;
                         this.ndZhenban.active = false;
@@ -349,6 +382,7 @@ cc.Class({
     },
     //把切好的放入汉堡
     vegetableToham:function(){
+        this.lbtixong.string = "我已经把蔬菜放好咯~请点击下一步吧！"
         this.mask.inverted = true;
         this.ndChoose.getChildByName("1").active = true;
         this.ndBread.active = true;
@@ -373,10 +407,13 @@ cc.Class({
         }
     },
     eventTarget: function (event) {
+        this.lbtixong.string = "选好了，就点击下一步吧！"
         let ndTarget = event.target.parent;
         this.addPicture(ndTarget);
     },
     eventTargetTwo:function(event){
+        this.ndNextBtn2.active = false;
+        this.lbtixong.string = "试着把小刀往下拉吧！有惊喜哦~"
         let ndName = event.target.parent.name - 0;
         this.ndNextBtn.getComponent(cc.Button).interactable = true;
         cc.log("【点击按钮后的获取按钮名字】",ndName);

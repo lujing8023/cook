@@ -99,6 +99,8 @@ cc.Class({
         }
     },
     onLoad: function () {
+        //mask脚本引进
+        this._comMaskCtl = this.ndBread.getComponent("maskCtl").initCom(this);
         cc.director.preloadScene("Main", function () {
             cc.log("Next scene preloaded");
         });
@@ -214,7 +216,7 @@ cc.Class({
                     this.ndHotBread.active = true;
                     this.upTouch();
                     cc.log("现在是烤面包阶段");
-                    this.lbtixong.string = "烤面包咯~试着拖动面包到面包里里吧！"
+                    this.lbtixong.string = "烤面包咯~试着拖动面包到面包机里吧！"
                     }else{
                         // if(this.ndJame.active == false){
                             this.lbtixong.string = "选一个喜欢的果酱吧！"
@@ -236,7 +238,10 @@ cc.Class({
                 }
                 }else{
                     this.lbtixong.string = "开始涂抹面包吧！（记得涂满呦~）"
-                    this.touchBegin()
+                    this.ndNextBtn2.active = true;
+                    this.ndNextBtn.getComponent(cc.Button).interactable = false;
+                    this._comMaskCtl.beginTouch();
+                    // this.touchBegin()
                     this.ndBread.active = true;
                     // this.rsultLabel.node.active = true;
                     this.mask.node.active = true;
@@ -455,10 +460,12 @@ cc.Class({
     },
     //刮刮卡
     touchBegin:function(){
+        this.minPercent = 0.9 ;
         this.node.on(cc.Node.EventType.TOUCH_START, this._onTouchBegin, this);
         this.node.on(cc.Node.EventType.TOUCH_MOVE, this._onTouchMoved, this);
         this.node.on(cc.Node.EventType.TOUCH_END, this._onTouchEnd, this);
         this.node.on(cc.Node.EventType.TOUCH_CANCEL, this._onTouchCancel, this);
+        this.init();
     },
 
     onDestroy:function () {
@@ -490,9 +497,48 @@ cc.Class({
     _addCircle:function (point) {
         var stencil = this.mask._clippingStencil;
         var color = cc.color(255, 255, 255, 0);
-        stencil.drawPoly(this.mask._calculateCircle(point,cc.p(50,50), 64), color, 0, color);
+        stencil.drawPoly(this.mask._calculateCircle(point,cc.p(20,20), 64), color, 0, color);
         if (!CC_JSB) {
             cc.renderer.childrenOrderDirty = true;
+            this.ndNextBtn2.active = false;
+            this.ndNextBtn.getComponent(cc.Button).interactable = true;
+        }
+        let _point = cc.v2(point.x + this.startSizeW / 2, point.y + this.startSizeH / 2 );
+        this._updateCheckOver(_point ,()=>{
+            this.mask.node.active = false;
+            this._targetCom.ndYaoHuang.active = false;
+        })
+    },
+    init : function () {
+        this.startSizeW = this.node.getContentSize().width * this.node.scaleX;
+        this.startSizeH = this.node.getContentSize().height * this.node.scaleY;
+        this.n = 10 ; // 行
+        this.m = 10 ; // 列
+        this.BoxSizeW = this.startSizeW / this.n ;
+        this.BoxSizeH = this.startSizeH / this.m ;
+        this.BoxArr = [];
+        for (let i = 0; i < this.n * this.m; i++) {
+            this.BoxArr.push( false );  
+        }
+
+    },
+
+    _updateCheckOver : function ( point  , cb = null){
+        let bReturn = false; 
+        let _m = parseInt( point.x / (this.startSizeW / this.m ) ) ; 
+        let _n = parseInt( point.y / (this.startSizeH / this.n ) ); 
+        let index = _n * this.m  + _m 
+        if(!this.BoxArr[index]) {
+            this.BoxArr[index] = true ;
+            let count = 0 ;
+            for (let i = 0; i < this.BoxArr.length; i++) {
+                if(this.BoxArr[i])count ++ ;     
+            }
+
+            if(count / this.BoxArr.length  > this.minPercent)bReturn = true;
+        }
+        if(bReturn){
+            if(cb)cb();
         }
     },
     //到移动画线
@@ -537,6 +583,10 @@ cc.Class({
                             cc.log("【触摸开始】")
                             this.cutMove();
                         }, this);  
+                        // this.ndZhenban.off(cc.Node.EventType.TOUCH_START, function (event) {
+                        //     cc.log("【触摸开始】")
+                        //     this.cutMove();
+                        // }, this); 
                     }
                 }
             }

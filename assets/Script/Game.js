@@ -78,6 +78,8 @@ cc.Class({
         addType      : 1,
         //刀移动
         numStep      : 1,
+        // arrName      :-1,
+        // this.obj = {};
     },
     //音乐
     play: function () {
@@ -99,6 +101,23 @@ cc.Class({
         }
     },
     onLoad: function () {
+        this.arrName = cc.sys.localStorage.getItem("arrNum");
+        if(this.arrName == undefined){
+            this.arrName = -1;
+            this.obj = {};
+        }else{
+            this.objarr = cc.sys.localStorage.getItem("arr");
+            this.obj = JSON.parse(this.objarr);
+        }
+        //记录数组名字数字
+        //创建存储数组对象
+        //创建保存的数组
+        this.Arr = [ null , null , null , null];
+        this.panNum   = 1;
+        this.breadNum = 1;
+        this.jamNum   = 1;
+        this.vegeNum  = 1;
+        this.MetNum   = 1;
         //mask脚本引进
         this._comMaskCtl = this.ndBread.getComponent("maskCtl").initCom(this);
         cc.director.preloadScene("Main", function () {
@@ -254,15 +273,16 @@ cc.Class({
                 if (this.numRem % 2 == 1) {
                     if(this.numRem == 9){
                         this.lbtixong.string = "选择一个喜欢的小肉吧！"
+                        this.ndKnife.active = false;
                         this.ndNextBtn2.active = true;
                         this.ndNextBtn.getComponent(cc.Button).interactable = false;
-                        this.onDestroy()
+                        
                         this.touchOff();
                         this.upKnife();
-                        this.ndZhenban.off(cc.Node.EventType.TOUCH_START, function (event) {
-                            cc.log("【触摸开始】")
-                            this.cutMove();
-                        }, this);
+                        // this.ndZhenban.off(cc.Node.EventType.TOUCH_START, function (event) {
+                        //     cc.log("【触摸开始】")
+                        //     this.cutMove();
+                        // }, this);
                         //变换第二种类型
                         this.addType = 2
                         cc.log("this.numRem什么阶段",this.numRem);
@@ -276,7 +296,6 @@ cc.Class({
                         this.lbtixong.string = "请选一个你喜欢的蔬菜吧！"
                             this.ndNextBtn.getComponent(cc.Button).interactable = false;
                             this.ndNextBtn2.active = true;
-                            this.onDestroy();
                             this.touchOff();
                             this.upKnife();
                             this.ndZhenban.off(cc.Node.EventType.TOUCH_START, function (event) {
@@ -294,6 +313,17 @@ cc.Class({
                 }else{
                 // this.numRem += 1;
                     if(this.numRem == 10){
+                        this.ndZhenban.off(cc.Node.EventType.TOUCH_START, function (event) {
+                            cc.log("【触摸开始】")
+                            this.cutMove();
+                        }, this);
+                        //变换第二种类型
+                        let name = this.arrName - 0 + 1 + "";
+                        this.arrName = name - 0;
+                        cc.sys.localStorage.setItem("arrNum", this.arrName);
+                        this.obj[name] = this.Arr;
+                        let saveArr = JSON.stringify(this.obj)
+                        cc.sys.localStorage.setItem("arr", saveArr);
                         this.lbtixong.string = "好像有点丑，再接再厉！（*^_^*）"
                         this.ndChoose.getChildByName("1").active = true;
                         this.ndBread.active = true;
@@ -388,6 +418,7 @@ cc.Class({
     //把切好的放入汉堡
     vegetableToham:function(){
         this.lbtixong.string = "我已经把蔬菜放好咯~请点击下一步吧！"
+        this._comMaskCtl.onDestroy()
         this.mask.inverted = true;
         this.ndChoose.getChildByName("1").active = true;
         this.ndBread.active = true;
@@ -412,9 +443,27 @@ cc.Class({
         }
     },
     eventTarget: function (event) {
-        this.lbtixong.string = "选好了，就点击下一步吧！"
-        let ndTarget = event.target.parent;
-        this.addPicture(ndTarget);
+        if(this.numRem == 1){
+            cc.log("【进入选盘子记录盘子】")
+            this.lbtixong.string = "选好了，就点击下一步吧！"
+            let ndTarget = event.target.parent;
+            let nam2 = ndTarget.name
+            this.addPicture(ndTarget);
+            this.panNum = nam2-0;
+            cc.log("【选了第几个】",this.panNum);
+            this.Arr[0] = this.panNum;
+            cc.log("【数组】",this.Arr)
+        }else{
+            cc.log("【进入选面包记录面包】")
+            this.lbtixong.string = "选好了，就点击下一步吧！"
+            let ndTarget = event.target.parent;
+            let nam2 = ndTarget.name
+            this.addPicture(ndTarget);
+            this.breadNum = nam2-0;
+            this.Arr[1] = this.breadNum;
+            cc.log("【数组】",this.Arr)
+            cc.log("【选了第几个】",this.breadNum)
+        }
     },
     eventTargetTwo:function(event){
         this.ndNextBtn2.active = false;
@@ -424,8 +473,12 @@ cc.Class({
         cc.log("【点击按钮后的获取按钮名字】",ndName);
         if(this.ndListParTwo.active == false){
             this.preNode = cc.instantiate(this.PbListCtl[ndName]);
+            this.Arr[2] = ndName;
+            cc.log("【数组】",this.Arr);
         }else{
             this.preNode = cc.instantiate(this.PbListMet[ndName]);
+            this.Arr[3] = ndName;
+            cc.log("【数组】",this.Arr);
         }
         if(this.ndChoose.getChildByName("6").children.length == 1){
             this.ndChoose.getChildByName("6").children[0].removeFromParent();
@@ -459,90 +512,10 @@ cc.Class({
             manager.enabled = true;
     },
     //刮刮卡
-    touchBegin:function(){
-        this.minPercent = 0.9 ;
-        this.node.on(cc.Node.EventType.TOUCH_START, this._onTouchBegin, this);
-        this.node.on(cc.Node.EventType.TOUCH_MOVE, this._onTouchMoved, this);
-        this.node.on(cc.Node.EventType.TOUCH_END, this._onTouchEnd, this);
-        this.node.on(cc.Node.EventType.TOUCH_CANCEL, this._onTouchCancel, this);
-        this.init();
-    },
-
-    onDestroy:function () {
-        this.node.off(cc.Node.EventType.TOUCH_START, this._onTouchBegin, this);
-        this.node.off(cc.Node.EventType.TOUCH_MOVE, this._onTouchMoved, this);
-        this.node.off(cc.Node.EventType.TOUCH_END, this._onTouchEnd, this);
-        this.node.off(cc.Node.EventType.TOUCH_CANCEL, this._onTouchCancel, this);
-    },
-
-    _onTouchBegin:function (event) {
-        cc.log('touchBegin');
-        var point = event.touch.getLocation();
-        point = this.ndBread.convertToNodeSpaceAR(point);
-        this._addCircle(point);
-    },
-
-    _onTouchMoved:function (event) {
-        var point = event.touch.getLocation();
-        point = this.ndBread.convertToNodeSpaceAR(point);
-        this._addCircle(point);
-    },
-
-    _onTouchEnd:function (event) {
-        var point = event.touch.getLocation();
-        point = this.ndBread.convertToNodeSpaceAR(point);
-        this._addCircle(point);
-    },
-
-    _addCircle:function (point) {
-        var stencil = this.mask._clippingStencil;
-        var color = cc.color(255, 255, 255, 0);
-        stencil.drawPoly(this.mask._calculateCircle(point,cc.p(20,20), 64), color, 0, color);
-        if (!CC_JSB) {
-            cc.renderer.childrenOrderDirty = true;
-            this.ndNextBtn2.active = false;
-            this.ndNextBtn.getComponent(cc.Button).interactable = true;
-        }
-        let _point = cc.v2(point.x + this.startSizeW / 2, point.y + this.startSizeH / 2 );
-        this._updateCheckOver(_point ,()=>{
-            this.mask.node.active = false;
-            this._targetCom.ndYaoHuang.active = false;
-        })
-    },
-    init : function () {
-        this.startSizeW = this.node.getContentSize().width * this.node.scaleX;
-        this.startSizeH = this.node.getContentSize().height * this.node.scaleY;
-        this.n = 10 ; // 行
-        this.m = 10 ; // 列
-        this.BoxSizeW = this.startSizeW / this.n ;
-        this.BoxSizeH = this.startSizeH / this.m ;
-        this.BoxArr = [];
-        for (let i = 0; i < this.n * this.m; i++) {
-            this.BoxArr.push( false );  
-        }
-
-    },
-
-    _updateCheckOver : function ( point  , cb = null){
-        let bReturn = false; 
-        let _m = parseInt( point.x / (this.startSizeW / this.m ) ) ; 
-        let _n = parseInt( point.y / (this.startSizeH / this.n ) ); 
-        let index = _n * this.m  + _m 
-        if(!this.BoxArr[index]) {
-            this.BoxArr[index] = true ;
-            let count = 0 ;
-            for (let i = 0; i < this.BoxArr.length; i++) {
-                if(this.BoxArr[i])count ++ ;     
-            }
-
-            if(count / this.BoxArr.length  > this.minPercent)bReturn = true;
-        }
-        if(bReturn){
-            if(cb)cb();
-        }
-    },
+    
     //到移动画线
     fromClick:function(){
+        this.ndKnife.active = true;
         this.numStep = 1;
         this.moveFun = this.preNode.getComponent("pbCtl");
         // moveFun.moveFun();
@@ -566,7 +539,7 @@ cc.Class({
                     self.moveFun.moveFun(this.numStep);
                     this.numStep += 1;
                     this.objPosition = this.moveFun.getPosition(this.numStep);                             
-                    let actionBy = cc.moveTo(1, cc.p(self.objPosition.posX, self.objPosition.posY));
+                    let actionBy = cc.moveTo(0.2, cc.p(self.objPosition.posX, self.objPosition.posY));
                     self.ndZhenban.off(cc.Node.EventType.TOUCH_MOVE, this.cutFunc, this)
                     self.ndKnife.runAction(actionBy);                 
                     // knifeLine.clear(true);                                     
@@ -575,9 +548,10 @@ cc.Class({
                         self.moveFun.moveFun(this.numStep);                                     
                         this.numStep += 1;
                         this.objPosition = this.moveFun.getPosition(this.numStep);                             
-                        let actionBy = cc.moveTo(1, cc.p(self.objPosition.posX, self.objPosition.posY));
+                        let actionBy = cc.moveTo(0.2, cc.p(self.objPosition.posX, self.objPosition.posY));
                         self.ndZhenban.off(cc.Node.EventType.TOUCH_MOVE, this.cutFunc, this)
                         self.ndKnife.runAction(actionBy);                  
+                        this.ndKnife.active = false;
                     }else{
                         this.ndZhenban.off(cc.Node.EventType.TOUCH_START, function (event) {
                             cc.log("【触摸开始】")

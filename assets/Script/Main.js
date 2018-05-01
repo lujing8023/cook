@@ -2,6 +2,10 @@ cc.Class({
     extends: cc.Component,
 
     properties: {
+        ndSand  :   cc.Node,
+        ndHam   :   cc.Node,
+        ndHot   :   cc.Node,
+        ndBin   :   cc.Node,
         ndBox   :   cc.Node,
         lbMes   :   cc.Label,
         ndClose :   cc.Node,
@@ -17,6 +21,7 @@ cc.Class({
         cc.director.preloadScene("Game", function () {
             cc.log("Next scene preloaded");
         });
+        this.donghua();
         this.audio = cc.sys.localStorage.getItem("GameAudio", this.audio);
         if(this.audio == "true" || this.audio==null){
             this.ndOpen.active  = true;
@@ -63,7 +68,20 @@ cc.Class({
                 cc.sys.localStorage.setItem("GameAudio", this.audio);
                 break;
             // case "next":
+            case "bin":
+            cc.director.loadScene("Bin");
+            break;
 
         }
+    },
+    donghua:function(){
+        let actionBy  = cc.rotateTo(2, -20);
+        let actionBy2 = cc.rotateTo(2, 20);
+        let plan3 = cc.repeat(cc.sequence(actionBy, actionBy2), 10000);
+        this.ndSand.runAction(plan3);
+        let actionBy3  = cc.scaleTo(2, 1.1);
+        let actionBy4 = cc.scaleTo(2, 1);
+        let plan4 = cc.repeat(cc.sequence(actionBy3, actionBy4), 10000);
+        this.ndBin.runAction(plan4);
     }
 });

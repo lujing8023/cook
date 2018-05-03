@@ -18,7 +18,7 @@ cc.Class({
 
 
     onLoad: function () {
-        cc.director.preloadScene("Game", function () {
+        cc.director.preloadScene("Choose", function () {
             cc.log("Next scene preloaded");
         });
         this.donghua();
@@ -42,7 +42,7 @@ cc.Class({
     onButtonClick: function (event, cb) {
         switch (cb) {
             case "sand":
-                cc.director.loadScene("Game");
+                cc.director.loadScene("Choose");
                 break;
             case "ham":
                 this.ndBox.active = true;
